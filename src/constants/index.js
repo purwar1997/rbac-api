@@ -7,9 +7,22 @@ export const JWT = Object.freeze({
 });
 
 export const REGEX = Object.freeze({
-  NAME: /^[a-zA-Z]+$/,
+  NAME: /^[A-Za-z\s]*$/,
   EMAIL: /^[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
   PHONE: /(0|91)?[6-9][0-9]{9}/,
   PASSWORD: /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*_])[a-zA-Z0-9!@#$%^&*_]{6,20}$/,
   IMAGE_URL: /^https?:\/\/.+\.(jpg|jpeg|png|gif)$/,
+});
+
+export const PERMISSIONS = Object.freeze({
+  VIEW_USER: 'view_user',
+  ACTIVATE_USER: 'activate_user',
+  DEACTIVATE_USER: 'deactivate_user',
+  ARCHIVE_USER: 'archive_user',
+  RESTORE_USER: 'restore_user',
+  VIEW_ROLE: 'view_role',
+  ADD_ROLE: 'add_role',
+  EDIT_ROLE: 'edit_role',
+  ASSIGN_ROLE: 'assign_role',
+  REMOVE_ROLE: 'remove_role',
 });

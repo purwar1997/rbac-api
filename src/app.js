@@ -10,12 +10,6 @@ const app = express();
 setupLogger(app);
 setupSwagger(app);
 
-app.get('/', (req, res) => {
-  res.status(200).json({
-    message: 'Express server is running',
-  });
-});
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
