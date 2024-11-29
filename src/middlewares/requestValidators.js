@@ -1,4 +1,4 @@
-import CustomError from '../utils/customError.js';
+import CustomError from '../utils/CustomError.js';
 
 const joiValidator = (schema, type) => (req, _res, next) => {
   const joiOptions = {

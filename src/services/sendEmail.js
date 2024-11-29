@@ -1,6 +1,6 @@
 import transporter from '../config/transporter.config.js';
 import config from '../config/env.config.js';
-import CustomError from '../utils/customError.js';
+import CustomError from '../utils/CustomError.js';
 
 const sendEmail = async options => {
   try {

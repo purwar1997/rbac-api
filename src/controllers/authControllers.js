@@ -1,6 +1,6 @@
 import User from '../models/user.js';
 import handleAsync from '../utils/handleAsync.js';
-import CustomError from '../utils/customError.js';
+import CustomError from '../utils/CustomError.js';
 import { setCookieOptions, clearCookieOptions } from '../utils/cookieOptions.js';
 import { sendResponse } from '../utils/helperFunctions.js';
 
