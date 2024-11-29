@@ -1,7 +1,4 @@
 node_modules/
 src/uploads/
 src/logs/
-
-nodemon.json
 .env
-.vercel
