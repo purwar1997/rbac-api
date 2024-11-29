@@ -64,3 +64,19 @@ export const loginSchema = customJoi.object({
     'string.empty': 'Password cannot be empty',
   }),
 });
+
+export const forgotPasswordSchema = customJoi.object({
+  email: emailSchema,
+});
+
+export const resetPasswordSchema = customJoi.object({
+  password: passwordSchema,
+  confirmPassword: confirmPasswordSchema,
+});
+
+export const tokenSchema = Joi.object({
+  token: Joi.string().trim().empty(':token').required().messages({
+    'any.required': 'Reset password token is required',
+    'string.empty': 'Reset password token cannot be empty',
+  }),
+});

@@ -58,3 +58,60 @@ export const logout = handleAsync(async (_req, res) => {
 
   sendResponse(res, 200, 'User logged out successfully');
 });
+
+// Sends an email to the user with reset password link
+export const forgotPassword = handleAsync(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new CustomError('No user registered with this email', 400);
+  }
+
+  const resetPasswordToken = user.generateForgotPasswordToken();
+  await user.save();
+
+  const resetPasswordUrl = `${req.protocol}://${req.host}/reset-password/${resetPasswordToken}`;
+
+  try {
+    const options = {
+      recipient: email,
+      subject: 'Reset your password',
+      text: `To reset your password, copy-paste the following link in browser and hit enter: ${resetPasswordUrl}.`,
+    };
+
+    await sendEmail(options);
+  } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiry = undefined;
+    await user.save();
+    throw new CustomError('Failed to send reset password email to the user', 500);
+  }
+
+  sendResponse(res, 200, 'Password reset email sent successfully');
+});
+
+// Allows users to reset their account password
+export const resetPassword = handleAsync(async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  const encryptedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+  const user = await User.findOne({
+    resetPasswordToken: encryptedToken,
+    resetPasswordExpiry: { $gt: new Date() },
+  });
+
+  if (!user) {
+    throw new CustomError('Reset password token is either invalid or expired', 400);
+  }
+
+  user.password = password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpiry = undefined;
+  await user.save();
+
+  sendResponse(res, 200, 'Password has been reset successfully');
+});

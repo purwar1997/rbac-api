@@ -12,9 +12,21 @@ const config = {
   auth: {
     jwtSecretKey: process.env.JWT_SECRET_KEY,
   },
+  email: {
+    username: process.env.EMAIL_USERNAME,
+    password: process.env.EMAIL_PASSWORD,
+    senderAddress: process.env.SENDER_ADDRESS,
+  },
 };
 
-const requiredConfig = ['server.port', 'database.url', 'auth.jwtSecretKey'];
+const requiredConfig = [
+  'server.port',
+  'database.url',
+  'auth.jwtSecretKey',
+  'email.username',
+  'email.password',
+  'email.senderAddress',
+];
 
 requiredConfig.forEach(key => {
   const keys = key.split('.');

@@ -48,6 +48,8 @@ const userSchema = new Schema(
       },
       publicId: String,
     },
+    resetPasswordToken: String,
+    resetPasswordExpiry: Date,
   },
   {
     timestamps: true,
@@ -99,6 +101,14 @@ userSchema.methods = {
     });
 
     return jwtToken;
+  },
+
+  generateForgotPasswordToken() {
+    const token = crypto.randomBytes(32).toString('hex');
+    this.resetPasswordToken = crypto.createHash('sha256').update(token).digest('hex');
+    this.resetPasswordExpiry = new Date(Date.now() + 30 * 60 * 1000);
+
+    return token;
   },
 };
 
