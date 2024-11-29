@@ -52,6 +52,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: true,
     },
+    isArchived: {
+      type: Boolean,
+      default: false,
+    },
     resetPasswordToken: String,
     resetPasswordExpiry: Date,
   },
