@@ -1,0 +1,14 @@
+# dependencies
+node_modules/
+
+# config files
+nodemon.json
+
+# environment variables
+.env
+
+# file uploads
+src/uploads/
+
+# logs
+src/logs/
