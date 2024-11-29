@@ -48,6 +48,10 @@ const userSchema = new Schema(
       },
       publicId: String,
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
     resetPasswordToken: String,
     resetPasswordExpiry: Date,
   },
