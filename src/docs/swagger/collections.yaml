@@ -44,8 +44,9 @@ paths:
                   type: string
                 confirmPassword:
                   type: string
+      responses:
         '201':
-          description: A JSON object containing a new account
+          description: A JSON object containing a newly created user
           content:
             application/json:
               schema:
