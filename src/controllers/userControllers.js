@@ -111,3 +111,39 @@ export const removeRoleFromUser = handleAsync(async (req, res) => {
 
   sendResponse(res, 200, 'Role removed from user successfully', updatedUser);
 });
+
+export const activateUser = handleAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const activatedUser = await User.findByIdAndUpdate(
+    userId,
+    { isActive: true },
+    { runValidators: true, new: true }
+  );
+
+  if (!activatedUser) {
+    throw new CustomError('User not found', 404);
+  }
+
+  sendResponse(res, 200, 'User activated successfully', activatedUser);
+});
+
+export const deactivateUser = handleAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const deactivatedUser = await User.findByIdAndUpdate(
+    userId,
+    { isActive: false },
+    { runValidators: true, new: true }
+  );
+
+  if (!deactivatedUser) {
+    throw new CustomError('User not found', 404);
+  }
+
+  sendResponse(res, 200, 'User deactivated successfully', deactivatedUser);
+});
+
+export const archiveUser = handleAsync(async (req, res) => {});
+
+export const restoreArchivedUser = handleAsync(async (req, res) => {});

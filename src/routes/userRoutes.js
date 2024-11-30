@@ -10,6 +10,8 @@ import {
   getUserById,
   assignRoleToUser,
   removeRoleFromUser,
+  activateUser,
+  deactivateUser,
 } from '../controllers/userControllers.js';
 import { PERMISSIONS } from '../constants/index.js';
 
@@ -50,6 +52,24 @@ router
     isAuthorized(PERMISSIONS.REMOVE_ROLE),
     validatePathParams(userIdSchema),
     removeRoleFromUser
+  );
+
+router
+  .route('/:userId/activate')
+  .put(
+    isAuthenticated,
+    isAuthorized(PERMISSIONS.ACTIVATE_USER),
+    validatePathParams(userIdSchema),
+    activateUser
+  );
+
+router
+  .route('/:userId/deactivate')
+  .put(
+    isAuthenticated,
+    isAuthorized(PERMISSIONS.DEACTIVATE_USER),
+    validatePathParams(userIdSchema),
+    deactivateUser
   );
 
 export default router;
