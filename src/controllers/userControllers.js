@@ -5,12 +5,14 @@ import CustomError from '../utils/CustomError.js';
 import { sendResponse } from '../utils/helperFunctions.js';
 import { clearCookieOptions } from '../utils/cookieOptions.js';
 
+// Allows users to fetch their profile
 export const getUserProfile = handleAsync(async (_req, res) => {
   const { user } = res;
 
   sendResponse(res, 200, 'Profile fetched successfully', user);
 });
 
+// Allows users to update their profile details
 export const updateUserProfile = handleAsync(async (req, res) => {
   const updates = req.body;
 
@@ -35,6 +37,7 @@ export const updateUserProfile = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'Profile updated successfully', updatedUser);
 });
 
+// Allows users to delete their account
 export const deleteAccount = handleAsync(async (req, res) => {
   const userId = req.user._id;
 
@@ -45,6 +48,7 @@ export const deleteAccount = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'Account deleted successfully');
 });
 
+// Allows admins to fetch all users
 export const getAllUsers = handleAsync(async (_req, res) => {
   const users = await User.find({ isArchived: false })
     .select({
@@ -60,6 +64,7 @@ export const getAllUsers = handleAsync(async (_req, res) => {
   sendResponse(res, 200, 'Users fetched successfully', users);
 });
 
+// Allows admins to fetch a user by ID
 export const getUserById = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
@@ -72,6 +77,7 @@ export const getUserById = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'User fetched by ID successfully', user);
 });
 
+// Allows admins to assign a role to user
 export const assignRoleToUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
   const { role: roleId } = req.body;
@@ -97,6 +103,7 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'Role assigned to user successfully', updatedUser);
 });
 
+// Allows admins to remove a role from user
 export const removeRoleFromUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
@@ -113,6 +120,7 @@ export const removeRoleFromUser = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'Role removed from user successfully', updatedUser);
 });
 
+// Allows admins to activate a user
 export const activateUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
@@ -129,6 +137,7 @@ export const activateUser = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'User activated successfully', activatedUser);
 });
 
+// Allows admins to deactivate a user
 export const deactivateUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
@@ -145,6 +154,7 @@ export const deactivateUser = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'User deactivated successfully', deactivatedUser);
 });
 
+// Allows admins to archive a user
 export const archiveUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
@@ -161,6 +171,7 @@ export const archiveUser = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'User archived successfully', archivedUser);
 });
 
+// Allows admins to restore an archived user
 export const restoreArchivedUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
