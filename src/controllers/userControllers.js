@@ -55,10 +55,7 @@ export const getAllUsers = handleAsync(async (_req, res) => {
       avatar: 1,
       isActive: 1,
     })
-    .populate({
-      path: 'role',
-      select: 'title',
-    });
+    .populate({ path: 'role', select: 'title' });
 
   sendResponse(res, 200, 'Users fetched successfully', users);
 });
@@ -95,7 +92,7 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
     userId,
     { role: roleId },
     { runValidators: true, new: true }
-  );
+  ).populate({ path: 'role', select: 'title' });
 
   sendResponse(res, 200, 'Role assigned to user successfully', updatedUser);
 });
@@ -103,7 +100,11 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
 export const removeRoleFromUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
-  const updatedUser = await User.findByIdAndUpdate(userId, { $unset: { role: 1 } }, { new: true });
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $unset: { role: 1 } },
+    { new: true }
+  ).populate({ path: 'role', select: 'title' });
 
   if (!updatedUser) {
     throw new CustomError('User not found', 404);
@@ -144,6 +145,34 @@ export const deactivateUser = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'User deactivated successfully', deactivatedUser);
 });
 
-export const archiveUser = handleAsync(async (req, res) => {});
+export const archiveUser = handleAsync(async (req, res) => {
+  const { userId } = req.params;
 
-export const restoreArchivedUser = handleAsync(async (req, res) => {});
+  const archivedUser = await User.findByIdAndUpdate(
+    userId,
+    { isArchived: true },
+    { runValidators: true, new: true }
+  );
+
+  if (!archivedUser) {
+    throw new CustomError('User not found', 404);
+  }
+
+  sendResponse(res, 200, 'User archived successfully', archivedUser);
+});
+
+export const restoreArchivedUser = handleAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const restoredUser = await User.findByIdAndUpdate(
+    userId,
+    { isArchived: false },
+    { runValidators: true, new: true }
+  );
+
+  if (!restoredUser) {
+    throw new CustomError('User not found', 404);
+  }
+
+  sendResponse(res, 200, 'Archived user restored successfully', restoredUser);
+});

@@ -12,6 +12,8 @@ import {
   removeRoleFromUser,
   activateUser,
   deactivateUser,
+  archiveUser,
+  restoreArchivedUser,
 } from '../controllers/userControllers.js';
 import { PERMISSIONS } from '../constants/index.js';
 
@@ -70,6 +72,24 @@ router
     isAuthorized(PERMISSIONS.DEACTIVATE_USER),
     validatePathParams(userIdSchema),
     deactivateUser
+  );
+
+router
+  .route('/:userId/archive')
+  .put(
+    isAuthenticated,
+    isAuthorized(PERMISSIONS.ARCHIVE_USER),
+    validatePathParams(userIdSchema),
+    archiveUser
+  );
+
+router
+  .route('/:userId/restore')
+  .put(
+    isAuthenticated,
+    isAuthorized(PERMISSIONS.RESTORE_USER),
+    validatePathParams(userIdSchema),
+    restoreArchivedUser
   );
 
 export default router;
