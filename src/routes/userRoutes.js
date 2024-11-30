@@ -6,9 +6,14 @@ import {
   getUserProfile,
   updateUserProfile,
   deleteAccount,
+  getAllUsers,
+  getUserById,
 } from '../controllers/userControllers.js';
+import { PERMISSIONS } from '../constants/index.js';
 
 const router = express.Router();
+
+router.route('/').get(isAuthenticated, getAllUsers);
 
 router
   .route('/self')
@@ -16,5 +21,7 @@ router
   .get(getUserProfile)
   .put(validatePayload(updateProfileSchema), updateUserProfile)
   .delete(deleteAccount);
+
+router.route('/:userId').get(isAuthenticated, isAuthorized(PERMISSIONS.VIEW_USER), getUserById);
 
 export default router;

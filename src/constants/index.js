@@ -26,3 +26,16 @@ export const PERMISSIONS = Object.freeze({
   ASSIGN_ROLE: 'assign_role',
   REMOVE_ROLE: 'remove_role',
 });
+
+export const PERMISSIONS_DESCRIPTION = Object.freeze({
+  [PERMISSIONS.VIEW_USER]: 'View a user',
+  [PERMISSIONS.ACTIVATE_USER]: 'Activate a user',
+  [PERMISSIONS.DEACTIVATE_USER]: 'Deactivate a user',
+  [PERMISSIONS.ARCHIVE_USER]: 'Archive a user',
+  [PERMISSIONS.RESTORE_USER]: 'Restore an archived user',
+  [PERMISSIONS.VIEW_ROLE]: 'View a role',
+  [PERMISSIONS.ADD_ROLE]: 'Add a new role',
+  [PERMISSIONS.EDIT_ROLE]: 'Edit a role',
+  [PERMISSIONS.ASSIGN_ROLE]: 'Assign role to the user',
+  [PERMISSIONS.REMOVE_ROLE]: 'Remove role from the user',
+});
