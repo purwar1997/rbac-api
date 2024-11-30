@@ -28,7 +28,7 @@ export const isAuthenticated = handleAsync(async (req, _res, next) => {
   next();
 });
 
-export const isAuthorized = routePermission =>
+export const isAuthorized = requiredPermission =>
   handleAsync(async (req, _res, next) => {
     const { user } = req;
 
@@ -46,10 +46,10 @@ export const isAuthorized = routePermission =>
       );
     }
 
-    if (!user.role.permissions.includes(routePermission)) {
+    if (!user.role.permissions.includes(requiredPermission)) {
       throw new CustomError(
         `User has been a assigned a role of ${user.role.title.toLowerCase()}. Therefore, he doesn't have neccessary permissions to ${PERMISSIONS_DESCRIPTION[
-          routePermission
+          requiredPermission
         ].toLowerCase()}.`,
         403
       );

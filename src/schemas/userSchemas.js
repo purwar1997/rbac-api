@@ -52,3 +52,12 @@ export const userIdSchema = Joi.string()
     'string.empty': 'User ID cannot be empty',
     'any.invalid': 'User ID is invalid. Expected a valid objectId',
   });
+
+export const roleSchema = customJoi.object({
+  role: Joi.string().trim().required().custom(validateObjectId).messages({
+    'any.required': 'Role is required',
+    'string.base': 'Role must be a string',
+    'string.empty': 'Role cannot be empty',
+    'any.invalid': 'Invalid ID format. Role must be a valid objectId',
+  }),
+});

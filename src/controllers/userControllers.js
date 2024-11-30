@@ -1,4 +1,5 @@
 import User from '../models/user.js';
+import Role from '../models/role.js';
 import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
 import { sendResponse } from '../utils/helperFunctions.js';
@@ -72,4 +73,41 @@ export const getUserById = handleAsync(async (req, res) => {
   }
 
   sendResponse(res, 200, 'User fetched by ID successfully', user);
+});
+
+export const assignRoleToUser = handleAsync(async (req, res) => {
+  const { userId } = req.params;
+  const { role: roleId } = req.body;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new CustomError('User not found', 404);
+  }
+
+  const role = await Role.findById(roleId);
+
+  if (!role) {
+    throw new CustomError('Provided role does not exist', 404);
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { role: roleId },
+    { runValidators: true, new: true }
+  );
+
+  sendResponse(res, 200, 'Role assigned to user successfully', updatedUser);
+});
+
+export const removeRoleFromUser = handleAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const updatedUser = await User.findByIdAndUpdate(userId, { $unset: { role: 1 } }, { new: true });
+
+  if (!updatedUser) {
+    throw new CustomError('User not found', 404);
+  }
+
+  sendResponse(res, 200, 'Role removed from user successfully', updatedUser);
 });
