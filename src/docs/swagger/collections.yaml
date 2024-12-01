@@ -91,7 +91,7 @@ paths:
     post:
       tags:
         - Authentication
-      description: Allows users to log out
+      description: Allows authenticated users to log out
       operationId: logout
       responses:
         '200':
@@ -162,7 +162,7 @@ paths:
     get:
       tags:
         - Users
-      description: Allows users to fetch their profile
+      description: Allows authenticated users to retrieve their profile
       operationId: getUserProfile
       responses:
         '200':
@@ -182,7 +182,7 @@ paths:
     put:
       tags:
         - Users
-      description: Allows users to update their profile details
+      description: Allows authenticated users to update their profile
       operationId: updateUserProfile
       requestBody:
         description: A JSON object containing profile updates
@@ -220,7 +220,7 @@ paths:
     delete:
       tags:
         - Users
-      description: Allows users to delete their account
+      description: Allows authenticated users to delete their account
       operationId: deleteAccount
       responses:
         '200':
@@ -234,7 +234,7 @@ paths:
     get:
       tags:
         - Users
-      description: Allows admins to fetch a list of all users
+      description: Allows authenticated users to retrieve a list of all users
       operationId: getAllUsers
       responses:
         '200':
@@ -270,12 +270,12 @@ paths:
     get:
       tags:
         - Users
-      description: Allows admins to fetch a user by ID
+      description: Allows authorized users to retrieve a user by ID
       operationId: getUserById
       parameters:
         - in: path
           name: userId
-          description: ID of the user to be fetched
+          description: ID of the user to be retrieved
           required: true
           schema:
             type: string
@@ -365,7 +365,7 @@ paths:
       tags:
         - Users
       description: Allows authorized users to update active status of another user
-      operationId: updateActiveUser
+      operationId: updateActiveStatus
       parameters:
         - in: path
           name: userId
@@ -448,11 +448,11 @@ paths:
     get:
       tags:
         - Roles
-      description: Allows authenticated users to fetch a list of all roles
+      description: Allows authenticated users to retrieve a list of all roles
       operationId: getAllRoles
       responses:
         '200':
-          description: A JSON object containing a list of all roles
+          description: A JSON object containing a list of roles
           content:
             application/json:
               schema:
@@ -509,12 +509,12 @@ paths:
     get:
       tags:
         - Roles
-      description: Allows authorized users to fetch a role by ID
+      description: Allows authorized users to retrieve a role by ID
       operationId: getRoleById
       parameters:
         - in: path
           name: roleId
-          description: ID of the role to be fetched
+          description: ID of the role to be retrieved
           operationId: getRoleById
           schema:
             type: string
@@ -536,7 +536,7 @@ paths:
     put:
       tags:
         - Roles
-      description: Allows authorized users to edit an existing role
+      description: Allows authorized users to update an existing role
       operationId: editRole
       parameters:
         - in: path
