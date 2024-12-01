@@ -8,6 +8,8 @@ info:
 servers:
   - url: http://localhost:4000/api
     description: Shopease Development Server
+  - url: http://api.rbac.shubhampurwar.in/api
+    description: Shopease Production Server
 
 tags:
   - name: Authentication
@@ -156,6 +158,292 @@ paths:
               schema:
                 $ref: '#/components/schemas/Success'
 
+  /users/self:
+    get:
+      tags:
+        - Users
+      description: Allows users to fetch their profile
+      operationId: getUserProfile
+      responses:
+        '200':
+          description: A JSON object containing user's profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
+    put:
+      tags:
+        - Users
+      description: Allows users to update their profile details
+      operationId: updateUserProfile
+      requestBody:
+        description: A JSON object containing profile updates
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                phone:
+                  type: string
+                password:
+                  type: string
+                confirmPassword:
+                  type: string
+      responses:
+        '200':
+          description: A JSON object containing an updated profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
+    delete:
+      tags:
+        - Users
+      description: Allows users to delete their account
+      operationId: deleteAccount
+      responses:
+        '200':
+          description: Account deletion success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+
+  /users:
+    get:
+      tags:
+        - Users
+      description: Allows admins to fetch a list of all users
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: A JSON object containing a list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    fullname:
+                      type: string
+                    email:
+                      type: string
+                    phone:
+                      type: string
+                    role:
+                      $ref: '#/components/schemas/UserPopulatedWithRole'
+                    avatar:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                        publicId:
+                          type: string
+                    isActive:
+                      type: boolean
+
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      description: Allows admins to fetch a user by ID
+      operationId: getUserById
+      parameters:
+        - in: path
+          name: userId
+          description: ID of the user to be fetched
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing a user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UserPopulatedWithRole'
+
+  /users/{userId}/role/assign:
+    put:
+      tags:
+        - Users
+      description: Allows authorized users to assign a role to another user
+      operationId: assignRoleToUser
+      parameters:
+        - in: path
+          name: userId
+          description: ID of the user that needs to be assigned a role
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: A JSON object containing ID of the role that needs to be assigned
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+      responses:
+        '200':
+          description: A JSON object containing an updated user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UserPopulatedWithRole'
+
+  /users/{userId}/role/unassign:
+    put:
+      tags:
+        - Users
+      description: Allows authorized users to unassign a role from another user
+      operationId: unassignRoleFromUser
+      parameters:
+        - in: path
+          name: userId
+          description: ID of the user that needs to be unassigned a role
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing an updated user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
+  /users/{userId}/status:
+    post:
+      tags:
+        - Users
+      description: Allows authorized users to update active status of another user
+      operationId: updateActiveUser
+      parameters:
+        - in: path
+          name: userId
+          description: ID of the user whose active status needs to be updated
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing an updated user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
+  /users/{userId}/archive:
+    put:
+      tags:
+        - Users
+      description: Allows authorized users to archive another user
+      operationId: archiveUser
+      parameters:
+        - in: path
+          name: userId
+          description: ID of the user that needs to be archived
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing an archived user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  succces:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
+  /users/{userId}/restore:
+    put:
+      tags:
+        - Users
+      description: Allows authorized users to restore an archived user
+      operationId: restoreArchivedUser
+      parameters:
+        - in: path
+          name: userId
+          description: ID of the archived user that needs to be restored
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing a restored user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  succces:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
 components:
   schemas:
     Success:
@@ -199,6 +487,67 @@ components:
         resetPasswordExpiry:
           type: string
           format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UserPopulatedWithRole:
+      type: object
+      properties:
+        id:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        fullname:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        role:
+          $ref: '#/components/schemas/Role'
+        avatar:
+          type: object
+          properties:
+            url:
+              type: string
+            publicId:
+              type: string
+        isActive:
+          type: boolean
+        isArchived:
+          type: boolean
+        resetPasswordToken:
+          type: string
+        resetPasswordExpiry:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        userCount:
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
