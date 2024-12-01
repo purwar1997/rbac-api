@@ -23,17 +23,17 @@ export const PERMISSIONS = Object.freeze({
   ADD_ROLE: 'add_role',
   EDIT_ROLE: 'edit_role',
   ASSIGN_ROLE: 'assign_role',
-  REMOVE_ROLE: 'remove_role',
+  UNASSIGN_ROLE: 'unassign_role',
 });
 
 export const PERMISSIONS_DESCRIPTION = Object.freeze({
   [PERMISSIONS.VIEW_USER]: 'View a user',
   [PERMISSIONS.ARCHIVE_USER]: 'Archive a user',
   [PERMISSIONS.RESTORE_USER]: 'Restore an archived user',
-  [PERMISSIONS.UPDATE_STATUS]: 'Updates an active status',
+  [PERMISSIONS.UPDATE_STATUS]: 'Update an active status of a user',
   [PERMISSIONS.VIEW_ROLE]: 'View a role',
   [PERMISSIONS.ADD_ROLE]: 'Add a new role',
   [PERMISSIONS.EDIT_ROLE]: 'Edit a role',
   [PERMISSIONS.ASSIGN_ROLE]: 'Assign role to the user',
-  [PERMISSIONS.REMOVE_ROLE]: 'Remove role from the user',
+  [PERMISSIONS.UNASSIGN_ROLE]: 'Unassign role from the user',
 });

@@ -50,7 +50,7 @@ router
   .route('/:userId/role/unassign')
   .put(
     isAuthenticated,
-    isAuthorized(PERMISSIONS.REMOVE_ROLE),
+    isAuthorized(PERMISSIONS.UNASSIGN_ROLE),
     validatePathParams(userIdSchema),
     unassignRoleFromUser
   );
