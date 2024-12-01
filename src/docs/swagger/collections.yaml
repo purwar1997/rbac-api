@@ -444,6 +444,129 @@ paths:
                   data:
                     $ref: '#/components/schemas/User'
 
+  /roles:
+    get:
+      tags:
+        - Roles
+      description: Allows authenticated users to fetch a list of all roles
+      operationId: getAllRoles
+      responses:
+        '200':
+          description: A JSON object containing a list of all roles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        userCount:
+                          type: integer
+                          format: int32
+                        createdAt:
+                          type: string
+                          format: date-time
+
+    post:
+      tags:
+        - Roles
+      description: Allows authorized users to add a new role
+      operationId: addNewRole
+      requestBody:
+        description: A JSON object containing role info
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleBody'
+      responses:
+        '201':
+          description: A JSON object containing a new role
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Role'
+
+  /roles/{roleId}:
+    get:
+      tags:
+        - Roles
+      description: Allows authorized users to fetch a role by ID
+      operationId: getRoleById
+      parameters:
+        - in: path
+          name: roleId
+          description: ID of the role to be fetched
+          operationId: getRoleById
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing a role
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Role'
+
+    put:
+      tags:
+        - Roles
+      description: Allows authorized users to edit an existing role
+      operationId: editRole
+      parameters:
+        - in: path
+          name: roleId
+          description: ID of the role to be updated
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: A JSON object containing role updates
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleBody'
+      responses:
+        '200':
+          description: A JSON object containing an updated role
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Role'
+
 components:
   schemas:
     Success:
@@ -542,9 +665,7 @@ components:
         title:
           type: string
         permissions:
-          type: array
-          items:
-            type: string
+          $ref: '#/components/schemas/RolePermissions'
         userCount:
           type: integer
           format: int32
@@ -554,3 +675,26 @@ components:
         updatedAt:
           type: string
           format: date-time
+
+    RoleBody:
+      type: object
+      properties:
+        title:
+          type: string
+        permissions:
+          $ref: '#/components/schemas/RolePermissions'
+
+    RolePermissions:
+      type: array
+      items:
+        type: string
+        enum:
+          - view_user
+          - archive_user
+          - restore_user
+          - update_status
+          - view_role
+          - add_role
+          - edit_role
+          - assign_role
+          - unassign_role
