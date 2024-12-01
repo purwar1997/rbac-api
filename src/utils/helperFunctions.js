@@ -51,3 +51,32 @@ export const validateObjectId = (value, helpers) => {
 
   return value;
 };
+
+export const checkPermissions = (value, helpers) => {
+  const permissions = [...new Set(value)];
+
+  if (!arePermissionsValid(permissions)) {
+    return helpers.error('any.invalid');
+  }
+
+  return value;
+};
+
+export const formatOptions = options => {
+  const optionsList = Object.values(options);
+
+  if (!optionsList.length) {
+    return [];
+  }
+
+  if (optionsList.length === 1) {
+    return optionsList[0];
+  }
+
+  if (optionsList.length === 2) {
+    return optionsList.join(' and ');
+  }
+
+  const lastOption = optionsList.pop();
+  return optionsList.join(', ') + 'and ' + lastOption;
+};
