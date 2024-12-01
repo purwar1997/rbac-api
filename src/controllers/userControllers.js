@@ -5,14 +5,14 @@ import CustomError from '../utils/CustomError.js';
 import { sendResponse } from '../utils/helperFunctions.js';
 import { clearCookieOptions } from '../utils/cookieOptions.js';
 
-// Allows users to fetch their profile
+// Allows authenticated users to retrieve their profile
 export const getUserProfile = handleAsync(async (_req, res) => {
   const { user } = res;
 
-  sendResponse(res, 200, 'Profile fetched successfully', user);
+  sendResponse(res, 200, 'Profile retrieved successfully', user);
 });
 
-// Allows users to update their profile details
+// Allows authenticated users to update their profile
 export const updateUserProfile = handleAsync(async (req, res) => {
   const updates = req.body;
 
@@ -37,7 +37,7 @@ export const updateUserProfile = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'Profile updated successfully', updatedUser);
 });
 
-// Allows users to delete their account
+// Allows authenticated users to delete their account
 export const deleteAccount = handleAsync(async (req, res) => {
   const userId = req.user._id;
 
@@ -56,7 +56,7 @@ export const deleteAccount = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'Account deleted successfully');
 });
 
-// Allows admins to fetch a list of all users
+// Allows authenticated users to retrieve a list of all users
 export const getAllUsers = handleAsync(async (_req, res) => {
   const users = await User.find({ isArchived: false })
     .select({
@@ -69,10 +69,10 @@ export const getAllUsers = handleAsync(async (_req, res) => {
     })
     .populate('role');
 
-  sendResponse(res, 200, 'Users fetched successfully', users);
+  sendResponse(res, 200, 'Users retrieved successfully', users);
 });
 
-// Allows admins to fetch a user by ID
+// Allows authorized users to retrieve a user by ID
 export const getUserById = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
@@ -82,10 +82,10 @@ export const getUserById = handleAsync(async (req, res) => {
     throw new CustomError('User not found', 404);
   }
 
-  sendResponse(res, 200, 'User fetched by ID successfully', user);
+  sendResponse(res, 200, 'User retrieved by ID successfully', user);
 });
 
-// Allows admins to assign a role to user
+// Allows authorized users to assign a role to another user
 export const assignRoleToUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
   const { role: roleId } = req.body;
@@ -117,7 +117,7 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'Role assigned to user successfully', updatedUser);
 });
 
-// Allows admins to unassign a role from user
+// Allows authorized users to unassign a role from another user
 export const unassignRoleFromUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 

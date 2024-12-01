@@ -52,7 +52,7 @@ export const login = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'User logged in successfully');
 });
 
-// Allows users to log out
+// Allows authenticated users to log out
 export const logout = handleAsync(async (_req, res) => {
   res.clearCookie('token', clearCookieOptions);
 

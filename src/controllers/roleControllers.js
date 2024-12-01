@@ -3,7 +3,7 @@ import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
 import { sendResponse } from '../utils/helperFunctions.js';
 
-// Allows users to fetch all the roles
+// Allows authenticated users to retrieve a list of all roles
 export const getAllRoles = handleAsync(async (_req, res) => {
   const roles = await Role.find().select({
     title: 1,
@@ -11,10 +11,10 @@ export const getAllRoles = handleAsync(async (_req, res) => {
     createdAt: 1,
   });
 
-  sendResponse(res, 200, 'Roles fetched successfully', roles);
+  sendResponse(res, 200, 'Roles retrieved successfully', roles);
 });
 
-// Allows users to fetch a role by ID
+// Allows authorized users to retrieve a role by ID
 export const getRoleById = handleAsync(async (req, res) => {
   const { roleId } = req.params;
 
@@ -24,10 +24,10 @@ export const getRoleById = handleAsync(async (req, res) => {
     throw new CustomError('Role not found', 404);
   }
 
-  sendResponse(res, 200, 'Role fetched by ID successfully', role);
+  sendResponse(res, 200, 'Role retrieved by ID successfully', role);
 });
 
-// Allows users to add a new role
+// Allows authorized users to add a new role
 export const addNewRole = handleAsync(async (req, res) => {
   const { title, permissions } = req.body;
 
@@ -54,7 +54,7 @@ export const addNewRole = handleAsync(async (req, res) => {
   sendResponse(res, 201, 'Role added successfully', newRole);
 });
 
-// Allows users to edit an existing role
+// Allows authorized users to update an existing role
 export const editRole = handleAsync(async (req, res) => {
   const { roleId } = req.params;
   const { title, permissions } = req.body;
