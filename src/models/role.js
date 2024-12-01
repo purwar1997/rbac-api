@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
-import { atleastOnePermission, arePermissionsValid } from '../utils/helperFunctions.js';
-import { REGEX } from '../constants/index.js';
+import {
+  atleastOnePermission,
+  arePermissionsValid,
+  formatOptions,
+} from '../utils/helperFunctions.js';
+import { PERMISSIONS, REGEX } from '../constants/index.js';
 
 const Schema = mongoose.Schema;
 
@@ -15,14 +19,17 @@ const roleSchema = new Schema(
     },
     permissions: {
       type: [String],
+      set: values => [...new Set(values)],
       validate: [
         {
           validator: atleastOnePermission,
-          message: 'A role must have atleast one permission',
+          message: 'Role must have atleast one permission',
         },
         {
           validator: arePermissionsValid,
-          message: 'One or more permissions are invalid',
+          message: `Provided invalid permissions. Valid permissions are ${formatOptions(
+            PERMISSIONS
+          )}`,
         },
       ],
     },
