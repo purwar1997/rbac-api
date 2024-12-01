@@ -56,7 +56,7 @@ export const deleteAccount = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'Account deleted successfully');
 });
 
-// Allows admins to fetch all the users
+// Allows admins to fetch a list of all users
 export const getAllUsers = handleAsync(async (_req, res) => {
   const users = await User.find({ isArchived: false })
     .select({
@@ -67,7 +67,7 @@ export const getAllUsers = handleAsync(async (_req, res) => {
       avatar: 1,
       isActive: 1,
     })
-    .populate({ path: 'role', select: 'title' });
+    .populate('role');
 
   sendResponse(res, 200, 'Users fetched successfully', users);
 });
@@ -106,7 +106,7 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
     userId,
     { role: roleId },
     { runValidators: true, new: true }
-  ).populate({ path: 'role', select: 'title' });
+  ).populate('role');
 
   await Role.findByIdAndUpdate(roleId, { $inc: { userCount: 1 } });
 
@@ -117,8 +117,8 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'Role assigned to user successfully', updatedUser);
 });
 
-// Allows admins to remove a role from user
-export const removeRoleFromUser = handleAsync(async (req, res) => {
+// Allows admins to unassign a role from user
+export const unassignRoleFromUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
   let user = await User.findById(userId);
@@ -132,44 +132,29 @@ export const removeRoleFromUser = handleAsync(async (req, res) => {
     await Role.findByIdAndUpdate(user.role, { $inc: { userCount: -1 } });
   }
 
-  sendResponse(res, 200, 'Role removed from user successfully', updatedUser);
+  sendResponse(res, 200, 'Role unassigned from user successfully', updatedUser);
 });
 
-// Allows admins to activate a user
-export const activateUser = handleAsync(async (req, res) => {
+// Allows authorized users to update active status of another user
+export const updateActiveStatus = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
-  const activatedUser = await User.findByIdAndUpdate(
-    userId,
-    { isActive: true },
-    { runValidators: true, new: true }
-  );
+  const user = await User.findById(userId);
 
-  if (!activatedUser) {
+  if (!user) {
     throw new CustomError('User not found', 404);
   }
 
-  sendResponse(res, 200, 'User activated successfully', activatedUser);
-});
-
-// Allows admins to deactivate a user
-export const deactivateUser = handleAsync(async (req, res) => {
-  const { userId } = req.params;
-
-  const deactivatedUser = await User.findByIdAndUpdate(
+  const userWithUpdatedStatus = await User.findByIdAndUpdate(
     userId,
-    { isActive: false },
+    { isActive: !user.isActive },
     { runValidators: true, new: true }
   );
 
-  if (!deactivatedUser) {
-    throw new CustomError('User not found', 404);
-  }
-
-  sendResponse(res, 200, 'User deactivated successfully', deactivatedUser);
+  sendResponse(res, 200, 'Active status of a user updated successfully', userWithUpdatedStatus);
 });
 
-// Allows admins to archive a user
+// Allows authorized users to archive another user
 export const archiveUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
@@ -186,7 +171,7 @@ export const archiveUser = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'User archived successfully', archivedUser);
 });
 
-// Allows admins to restore an archived user
+// Allows authorized users to restore an archived user
 export const restoreArchivedUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 

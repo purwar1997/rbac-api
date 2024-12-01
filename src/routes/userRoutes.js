@@ -9,9 +9,8 @@ import {
   getAllUsers,
   getUserById,
   assignRoleToUser,
-  removeRoleFromUser,
-  activateUser,
-  deactivateUser,
+  unassignRoleFromUser,
+  updateActiveStatus,
   archiveUser,
   restoreArchivedUser,
 } from '../controllers/userControllers.js';
@@ -48,30 +47,21 @@ router
   );
 
 router
-  .route('/:userId/role/remove')
+  .route('/:userId/role/unassign')
   .put(
     isAuthenticated,
     isAuthorized(PERMISSIONS.REMOVE_ROLE),
     validatePathParams(userIdSchema),
-    removeRoleFromUser
+    unassignRoleFromUser
   );
 
 router
-  .route('/:userId/activate')
-  .put(
+  .route('/:userId/status')
+  .post(
     isAuthenticated,
-    isAuthorized(PERMISSIONS.ACTIVATE_USER),
+    isAuthorized(PERMISSIONS.UPDATE_STATUS),
     validatePathParams(userIdSchema),
-    activateUser
-  );
-
-router
-  .route('/:userId/deactivate')
-  .put(
-    isAuthenticated,
-    isAuthorized(PERMISSIONS.DEACTIVATE_USER),
-    validatePathParams(userIdSchema),
-    deactivateUser
+    updateActiveStatus
   );
 
 router

@@ -16,10 +16,9 @@ export const REGEX = Object.freeze({
 
 export const PERMISSIONS = Object.freeze({
   VIEW_USER: 'view_user',
-  ACTIVATE_USER: 'activate_user',
-  DEACTIVATE_USER: 'deactivate_user',
   ARCHIVE_USER: 'archive_user',
   RESTORE_USER: 'restore_user',
+  UPDATE_STATUS: 'update_status',
   VIEW_ROLE: 'view_role',
   ADD_ROLE: 'add_role',
   EDIT_ROLE: 'edit_role',
@@ -29,10 +28,9 @@ export const PERMISSIONS = Object.freeze({
 
 export const PERMISSIONS_DESCRIPTION = Object.freeze({
   [PERMISSIONS.VIEW_USER]: 'View a user',
-  [PERMISSIONS.ACTIVATE_USER]: 'Activate a user',
-  [PERMISSIONS.DEACTIVATE_USER]: 'Deactivate a user',
   [PERMISSIONS.ARCHIVE_USER]: 'Archive a user',
   [PERMISSIONS.RESTORE_USER]: 'Restore an archived user',
+  [PERMISSIONS.UPDATE_STATUS]: 'Updates an active status',
   [PERMISSIONS.VIEW_ROLE]: 'View a role',
   [PERMISSIONS.ADD_ROLE]: 'Add a new role',
   [PERMISSIONS.EDIT_ROLE]: 'Edit a role',
