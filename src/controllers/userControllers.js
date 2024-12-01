@@ -41,14 +41,22 @@ export const updateUserProfile = handleAsync(async (req, res) => {
 export const deleteAccount = handleAsync(async (req, res) => {
   const userId = req.user._id;
 
-  await User.findByIdAndDelete(userId);
+  const deletedUser = await User.findByIdAndDelete(userId);
+
+  if (!deletedUser) {
+    throw new CustomError('User not found', 404);
+  }
+
+  if (deletedUser.role) {
+    await Role.findByIdAndUpdate(deletedUser.role, { $inc: { userCount: -1 } });
+  }
 
   res.clearCookie('token', clearCookieOptions);
 
   sendResponse(res, 200, 'Account deleted successfully');
 });
 
-// Allows admins to fetch all users
+// Allows admins to fetch all the users
 export const getAllUsers = handleAsync(async (_req, res) => {
   const users = await User.find({ isArchived: false })
     .select({
@@ -100,6 +108,12 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
     { runValidators: true, new: true }
   ).populate({ path: 'role', select: 'title' });
 
+  await Role.findByIdAndUpdate(roleId, { $inc: { userCount: 1 } });
+
+  if (user.role) {
+    await Role.findByIdAndUpdate(user.role, { $inc: { userCount: -1 } });
+  }
+
   sendResponse(res, 200, 'Role assigned to user successfully', updatedUser);
 });
 
@@ -107,14 +121,15 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
 export const removeRoleFromUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    { $unset: { role: 1 } },
-    { new: true }
-  ).populate({ path: 'role', select: 'title' });
+  let user = await User.findById(userId);
 
-  if (!updatedUser) {
+  if (!user) {
     throw new CustomError('User not found', 404);
+  }
+
+  if (user.role) {
+    user = await User.findByIdAndUpdate(userId, { $unset: { role: 1 } }, { new: true });
+    await Role.findByIdAndUpdate(user.role, { $inc: { userCount: -1 } });
   }
 
   sendResponse(res, 200, 'Role removed from user successfully', updatedUser);
