@@ -6,28 +6,51 @@
 ## 0. Table of Contents
 
 1. [Overview](#1-overview)
-2. [API Documentation](#2-api-documentation)
-3. [Main Features](#3-main-features)
-4. [Schemas and Routes](#4-schemas-and-routes)
+2. [Roles and Permissions](#2-roles-and-permissions)
+3. [Deployment and Documentation](#3-deployment-and-documentation)
+4. [Main Features](#4-main-features)
+5. [Schemas and Routes](#5-schemas-and-routes)
    - [Authentication Routes](#authentication-routes)
    - [User Routes](#user-routes)
    - [Role Routes](#role-routes)
 
 ## 1. Overview
 
-This project is a collection of REST APIs for a Role-Based Access Control system where certain permissions can be granted to users by assigning them specific roles. Here we don't have to manage permissions for every user. Instead, we have to create roles, map permissions with them, and then assign those roles to users. All the users who have been assigned a specific role inherit all the permissions mapped to it.
+This project is a collection of REST APIs for a Role-Based Access Control system where permissions to perform certain tasks can be granted to users by assigning them specific roles. Here we don't have to manage permissions for every user. Instead, we have to create roles, map permissions with them, and then assign those roles to users. All the users who have been assigned a specific role inherit all the permissions mapped to it.
 
-This project is built using Express.js and MongoDB; all the APIs are well-documented using Swagger Docs. User authentication has been implemented using JSON Web Tokens and the project is deployed on a DigitalOcean droplet using Nginx as a web server.
+This project is built using Express.js and MongoDB; all the APIs are well-documented using Swagger Docs. User authentication has been implemented using JSON Web Tokens and the project is deployed on a DigitalOcean Droplet using Nginx as a web server.
 
-## 2. API Documentation
+## 2. Roles and Permissions
 
-Swagger is used for API documentation. To view API docs, [click here](http://api.rbac.shubhampurwar.in/docs/swagger). All the APIs are live and functional. Select RBAC production server in the dropdown menu and play with any API.
+I have hardcoded a total of 9 permissions that are shared differently between 3 roles - Viewer, Moderator and Admin. Users are allowed to perform certain tasks based on the role they are assigned. Users who haven't been assigned a role don't have any permissions and therefore can't perform any task.
 
-## 3. Main Features
+This table encapsulates the relationship between different permissions and roles.
+
+| Permissions                  | Viewer | Moderator | Admin |
+| :--------------------------- | :----: | :-------: | :---: |
+| View user                    |  Yes   |    Yes    |  Yes  |
+| Assign role to user          |   No   |    Yes    |  Yes  |
+| Unassign role from user      |   No   |    Yes    |  Yes  |
+| Archive user                 |   No   |    Yes    |  Yes  |
+| Restore archived user        |   No   |    Yes    |  Yes  |
+| Update active status of user |   No   |    Yes    |  Yes  |
+| View role                    |  Yes   |    No     |  Yes  |
+| Add new role                 |   No   |    No     |  Yes  |
+| Edit existing role           |   No   |    No     |  Yes  |
+
+## 3. Deployment and Documentation
+
+This project is deployed on a DigitalOcean Droplet and linked to a custom domain. To visit the live deployment, [click here](http://api.rbac.shubhampurwar.in).
+
+APIs are documented using Swagger Docs and all of them are live and functional. [Click here](http://api.rbac.shubhampurwar.in/docs/swagger) to view API documentation. Select RBAC production server in the dropdown menu and play with any API.
+
+[![Documentation Preview](/media/swagger.png)](http://api.rbac.shubhampurwar.in/docs/swagger)
+
+## 4. Main Features
 
 - Authentication enabled using JSON Web Tokens
 - Authorization based on roles and permissions
-- APIs are deployed on DigitalOcean droplet using Nginx as a web server
+- APIs are deployed on DigitalOcean Droplet using Nginx as a web server
 - PM2 setup to make sure server keeps running and APIs are always live
 - Swagger Docs for documentation of APIs
 - Database modelling using various Mongoose schemas
@@ -40,7 +63,7 @@ Swagger is used for API documentation. To view API docs, [click here](http://api
 - Centralized error handling using Express middlewares
 - Routing using Express middlewares
 
-## 4. Schemas and Routes
+## 5. Schemas and Routes
 
 This project includes two schemas and over 20 routes and controllers.
 
