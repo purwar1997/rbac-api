@@ -7,9 +7,9 @@ info:
 
 servers:
   - url: http://localhost:4000/api
-    description: Shopease Development Server
+    description: RBAC Development Server
   - url: http://api.rbac.shubhampurwar.in/api
-    description: Shopease Production Server
+    description: RBAC Production Server
 
 tags:
   - name: Authentication
