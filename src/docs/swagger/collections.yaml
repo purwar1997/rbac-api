@@ -230,6 +230,100 @@ paths:
               schema:
                 $ref: '#/components/schemas/Success'
 
+  /users/self/avatar:
+    post:
+      tags:
+        - Users
+      description: Allows authenticated users to add their profile photo
+      operationId: addProfilePhoto
+      requestBody:
+        description: Payload containing an image in binary encoded format
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+              required:
+                - avatar
+            encoding:
+              avatar:
+                content-type: image/*
+      responses:
+        '200':
+          description: A JSON object containing an updated user profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
+    put:
+      tags:
+        - Users
+      description: Allows authenticated users to remove their profile photo
+      operationId: removeProfilePhoto
+      responses:
+        '200':
+          description: A JSON object containing an updated user profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
+  /users/self/avatar/update:
+    post:
+      tags:
+        - Users
+      description: Allows authenticated users to update their profile photo
+      operationId: updateProfilePhoto
+      requestBody:
+        description: Payload containing an image in binary encoded format
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+              required:
+                - avatar
+            encoding:
+              avatar:
+                content-type: image/*
+      responses:
+        '200':
+          description: A JSON object containing an updated user profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
   /users:
     get:
       tags:
