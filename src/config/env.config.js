@@ -17,6 +17,10 @@ const config = {
     password: process.env.EMAIL_PASSWORD,
     senderAddress: process.env.SENDER_ADDRESS,
   },
+  cloudinary: {
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    apiSecret: process.env.CLOUDINARY_API_SECRET,
+  },
 };
 
 const requiredConfig = [
@@ -26,6 +30,8 @@ const requiredConfig = [
   'email.username',
   'email.password',
   'email.senderAddress',
+  'cloudinary.apiKey',
+  'cloudinary.apiSecret',
 ];
 
 requiredConfig.forEach(key => {

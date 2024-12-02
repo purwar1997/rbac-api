@@ -1,5 +1,6 @@
 export const STORAGE = Object.freeze({
   DATABASE_NAME: 'rbac_system',
+  CLOUD_NAME: 'dlqnx5pot',
 });
 
 export const JWT = Object.freeze({
@@ -30,10 +31,17 @@ export const PERMISSIONS_DESCRIPTION = Object.freeze({
   [PERMISSIONS.VIEW_USER]: 'View a user',
   [PERMISSIONS.ARCHIVE_USER]: 'Archive a user',
   [PERMISSIONS.RESTORE_USER]: 'Restore an archived user',
-  [PERMISSIONS.UPDATE_STATUS]: 'Update an active status of a user',
+  [PERMISSIONS.UPDATE_STATUS]: 'Update active status of a user',
   [PERMISSIONS.VIEW_ROLE]: 'View a role',
   [PERMISSIONS.ADD_ROLE]: 'Add a new role',
   [PERMISSIONS.EDIT_ROLE]: 'Edit a role',
   [PERMISSIONS.ASSIGN_ROLE]: 'Assign role to the user',
   [PERMISSIONS.UNASSIGN_ROLE]: 'Unassign role from the user',
+});
+
+export const FILE_UPLOAD = Object.freeze({
+  FOLDER_NAME: 'user-avatars',
+  FILE_NAME: 'avatar',
+  MAX_FILES: 1,
+  MAX_FILE_SIZE: 20 * 1024 * 1024,
 });

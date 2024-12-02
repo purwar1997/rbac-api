@@ -1,11 +1,15 @@
 import express from 'express';
 import { isAuthenticated, isAuthorized } from '../middlewares/authMiddlewares.js';
 import { validatePathParams, validatePayload } from '../middlewares/requestValidators.js';
+import { parseFormData } from '../middlewares/parseFormData.js';
 import { updateProfileSchema, userIdSchema, roleSchema } from '../schemas/userSchemas.js';
 import {
   getUserProfile,
   updateUserProfile,
   deleteAccount,
+  addProfilePhoto,
+  updateProfilePhoto,
+  removeProfilePhoto,
   getAllUsers,
   getUserById,
   assignRoleToUser,
@@ -14,7 +18,7 @@ import {
   archiveUser,
   restoreArchivedUser,
 } from '../controllers/userControllers.js';
-import { PERMISSIONS } from '../constants/index.js';
+import { PERMISSIONS, FILE_UPLOAD } from '../constants/index.js';
 
 const router = express.Router();
 
@@ -26,6 +30,20 @@ router
   .get(getUserProfile)
   .put(validatePayload(updateProfileSchema), updateUserProfile)
   .delete(deleteAccount);
+
+router
+  .route('/self/avatar')
+  .all(isAuthenticated)
+  .post(parseFormData(FILE_UPLOAD.FOLDER_NAME, FILE_UPLOAD.FILE_NAME), addProfilePhoto)
+  .put(removeProfilePhoto);
+
+router
+  .route('/self/avatar/update')
+  .post(
+    isAuthenticated,
+    parseFormData(FILE_UPLOAD.FOLDER_NAME, FILE_UPLOAD.FILE_NAME),
+    updateProfilePhoto
+  );
 
 router
   .route('/:userId')

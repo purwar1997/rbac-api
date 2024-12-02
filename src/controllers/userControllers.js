@@ -4,6 +4,8 @@ import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
 import { sendResponse } from '../utils/helperFunctions.js';
 import { clearCookieOptions } from '../utils/cookieOptions.js';
+import { uploadImage, deleteImage } from '../services/cloudinaryAPIs.js';
+import { FILE_UPLOAD } from '../constants/index.js';
 
 // Allows authenticated users to retrieve their profile
 export const getUserProfile = handleAsync(async (_req, res) => {
@@ -54,6 +56,59 @@ export const deleteAccount = handleAsync(async (req, res) => {
   res.clearCookie('token', clearCookieOptions);
 
   sendResponse(res, 200, 'Account deleted successfully');
+});
+
+// Allows authenticated users to add their profile photo
+export const addProfilePhoto = handleAsync(async (req, res) => {
+  const { user } = req;
+
+  const response = await uploadImage(FILE_UPLOAD.FOLDER_NAME, req.file, user._id);
+
+  user.avatar = {
+    url: response.secure_url,
+    publicId: response.public_id,
+  };
+
+  const updatedUser = await user.save();
+
+  sendResponse(res, 200, 'Profile photo added successfully', updatedUser);
+});
+
+// Allows authenticated users to update their profile photo
+export const updateProfilePhoto = handleAsync(async (req, res) => {
+  const { user } = req;
+
+  if (user.avatar.publicId) {
+    await deleteImage(user.avatar.publicId);
+  }
+
+  const response = await uploadImage(FILE_UPLOAD.FOLDER_NAME, req.file, user._id);
+
+  user.avatar = {
+    url: response.secure_url,
+    publicId: response.public_id,
+  };
+
+  const updatedUser = await user.save();
+
+  sendResponse(res, 200, 'Profile photo updated successfully', updatedUser);
+});
+
+// Allows authenticated users to remove their profile photo
+export const removeProfilePhoto = handleAsync(async (req, res) => {
+  const { user } = req;
+
+  if (user.avatar.publicId) {
+    await deleteImage(user.avatar.publicId);
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    user._id,
+    { $unset: { avatar: 1 } },
+    { new: true }
+  );
+
+  sendResponse(res, 200, 'Profile photo removed successfully', updatedUser);
 });
 
 // Allows authenticated users to retrieve a list of all users
