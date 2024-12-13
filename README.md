@@ -16,7 +16,7 @@
 
 ## 1. Overview
 
-This project is a collection of REST APIs for a Role-Based Access Control system where permissions to perform certain tasks can be granted to users by assigning them specific roles. Here we don't have to manage permissions for every user. Instead, we have to create roles, map permissions with them, and then assign those roles to users. All the users who have been assigned a specific role inherit all the permissions mapped to it.
+RESTful API for a Role-Based Access Control system where permissions to perform certain tasks can be granted to users by assigning them specific roles. Here we don't have to manage permissions for every user. Instead, we have to create roles, map permissions with them, and then assign those roles to users. All the users who have been assigned a specific role inherit all the permissions mapped to it.
 
 This project is built using Express.js and MongoDB; all the APIs are well-documented using Swagger Docs. User authentication has been implemented using JSON Web Tokens and the project is deployed on a DigitalOcean Droplet using Nginx as a web server.
 
