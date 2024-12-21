@@ -18,7 +18,7 @@
 
 RESTful API for a Role-Based Access Control system where permissions to perform certain tasks can be granted to users by assigning them specific roles. Here we don't have to manage permissions for every user. Instead, we have to create roles, map permissions with them, and then assign those roles to users. All the users who have been assigned a specific role inherit all the permissions mapped to it.
 
-This project is built using Express.js and MongoDB; all the APIs are well-documented using Swagger Docs. User authentication has been implemented using JSON Web Tokens and the project is deployed on a DigitalOcean Droplet using Nginx as a web server.
+This project is built using Express.js and MongoDB; all the APIs are well-documented using Swagger specification. User authentication has been implemented via JSON Web Tokens and the project is deployed on a DigitalOcean Droplet using Nginx as a web server.
 
 ## 2. Roles and Permissions
 
@@ -42,26 +42,27 @@ This table encapsulates the relationship between different permissions and roles
 
 This project is deployed on a DigitalOcean Droplet and linked to a custom domain. To visit the live deployment, [click here](http://api.rbac.shubhampurwar.in).
 
-APIs are documented using Swagger Docs and all of them are live and functional. [Click here](http://api.rbac.shubhampurwar.in/docs/swagger) to view API documentation. Select RBAC production server in the dropdown menu and play with any API.
+APIs are documented using Swagger (OpenAPI) specification and all of them are live and functional. [Click here](http://api.rbac.shubhampurwar.in/docs/swagger) to view API docs. Select RBAC production server in the dropdown menu and play with any API.
 
 [![Documentation Preview](/media/swagger.png)](http://api.rbac.shubhampurwar.in/docs/swagger)
 
 ## 4. Main Features
 
-- Authentication enabled using JSON Web Tokens
-- Authorization based on roles and permissions
-- APIs are deployed on DigitalOcean Droplet using Nginx as a web server
-- PM2 setup to make sure server keeps running and APIs are always live
-- Swagger Docs for documentation of APIs
+- Authentication enabled using JSON Web Tokens (signup, login, reset password)
+- Authorization based on roles and permissions of a user
+- APIs are deployed on a DigitalOcean Droplet using Nginx as a web server
+- Configured PM2 to keep the API server running as a daemon process to ensure availability
+- Utilized the cluster module to evenly distribute incoming requests across all CPU cores in the server
+- APIs are documented using Swagger (OpenAPI) specification
 - Database modelling using various Mongoose schemas
+- Validation of request payload using Joi library
 - Logging of HTTP requests using Morgan
+- Parsing of multipart/form-data using Formidable library
 - Upload and delete images using Cloudinary APIs
 - Ability to send emails using Nodemailer
-- Project is based on MVC architecture
-- Validation of request payload using Joi library
-- Ability to parse multipart/form-data using Formidable
+- Routing enabled using Express middlewares
 - Centralized error handling using Express middlewares
-- Routing using Express middlewares
+- Project is based on MVC architecture
 
 ## 5. Schemas and Routes
 
