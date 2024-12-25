@@ -328,8 +328,8 @@ paths:
     get:
       tags:
         - Users
-      description: Allows authenticated users to retrieve a list of all users
-      operationId: getAllUsers
+      description: Allows authenticated users to retrieve a list of other users
+      operationId: getUsers
       responses:
         '200':
           description: A JSON object containing a list of users
@@ -349,14 +349,7 @@ paths:
                     phone:
                       type: string
                     role:
-                      $ref: '#/components/schemas/UserPopulatedWithRole'
-                    avatar:
-                      type: object
-                      properties:
-                        url:
-                          type: string
-                        publicId:
-                          type: string
+                      $ref: '#/components/schemas/UserWithRole'
                     isActive:
                       type: boolean
 
@@ -386,7 +379,7 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/UserPopulatedWithRole'
+                    $ref: '#/components/schemas/UserWithRole'
 
   /users/{userId}/role/assign:
     put:
@@ -424,7 +417,7 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/UserPopulatedWithRole'
+                    $ref: '#/components/schemas/UserWithRole'
 
   /users/{userId}/role/unassign:
     put:
@@ -711,7 +704,7 @@ components:
           type: string
           format: date-time
 
-    UserPopulatedWithRole:
+    UserWithRole:
       type: object
       properties:
         id:
