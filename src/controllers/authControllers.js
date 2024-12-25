@@ -99,19 +99,18 @@ export const resetPassword = handleAsync(async (req, res) => {
 
   const encryptedToken = crypto.createHash('sha256').update(token).digest('hex');
 
-  const user = await User.findOne({
-    resetPasswordToken: encryptedToken,
-    resetPasswordExpiry: { $gt: new Date() },
-  });
+  const user = await User.findOneAndUpdate(
+    { resetPasswordToken: encryptedToken, resetPasswordExpiry: { $gt: new Date() } },
+    {
+      password,
+      $unset: { resetPasswordToken: 1, resetPasswordExpiry: 1 },
+    },
+    { runValidators: true }
+  );
 
   if (!user) {
     throw new CustomError('Reset password token is either invalid or expired', 400);
   }
-
-  user.password = password;
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpiry = undefined;
-  await user.save();
 
   sendResponse(res, 200, 'Password has been reset successfully');
 });
