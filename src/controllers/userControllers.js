@@ -62,6 +62,10 @@ export const deleteAccount = handleAsync(async (req, res) => {
 export const addProfilePhoto = handleAsync(async (req, res) => {
   const { user } = req;
 
+  if (user.avatar?.publicId) {
+    throw new CustomError('Profile photo already exists', 409);
+  }
+
   const response = await uploadImage(FILE_UPLOAD.FOLDER_NAME, req.file, user._id);
 
   user.avatar = {
@@ -78,7 +82,7 @@ export const addProfilePhoto = handleAsync(async (req, res) => {
 export const updateProfilePhoto = handleAsync(async (req, res) => {
   const { user } = req;
 
-  if (user.avatar.publicId) {
+  if (user.avatar?.publicId) {
     await deleteImage(user.avatar.publicId);
   }
 
@@ -98,7 +102,7 @@ export const updateProfilePhoto = handleAsync(async (req, res) => {
 export const removeProfilePhoto = handleAsync(async (req, res) => {
   const { user } = req;
 
-  if (user.avatar.publicId) {
+  if (user.avatar?.publicId) {
     await deleteImage(user.avatar.publicId);
   }
 
