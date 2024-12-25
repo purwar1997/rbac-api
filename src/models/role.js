@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import {
-  atleastOnePermission,
+  atLeastOnePermission,
   arePermissionsValid,
   formatOptions,
 } from '../utils/helperFunctions.js';
@@ -22,12 +22,12 @@ const roleSchema = new Schema(
       set: values => [...new Set(values)],
       validate: [
         {
-          validator: atleastOnePermission,
-          message: 'Role must have atleast one permission',
+          validator: atLeastOnePermission,
+          message: 'Role must have at least one permission',
         },
         {
           validator: arePermissionsValid,
-          message: `Provided invalid permissions. Valid permissions are ${formatOptions(
+          message: `Provided invalid permissions. Valid permissions are: ${formatOptions(
             PERMISSIONS
           )}`,
         },

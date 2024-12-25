@@ -17,8 +17,7 @@ export const isAuthenticated = handleAsync(async (req, _res, next) => {
   }
 
   const decodedToken = jwt.verify(token, config.auth.jwtSecretKey);
-
-  const user = await User.findOne({ _id: decodedToken.userId }).populate('role');
+  const user = await User.findById(decodedToken.userId).populate('role');
 
   if (!user) {
     throw new CustomError('Access denied. User not found', 401);
@@ -41,7 +40,7 @@ export const isAuthorized = requiredPermission =>
 
     if (!user.isActive) {
       throw new CustomError(
-        'User is currently inactive. Therefore, he is not allowed to use any of his permissions.',
+        'User is currently inactive. Therefore, he is not allowed to use any of his permissions',
         403
       );
     }
@@ -50,7 +49,7 @@ export const isAuthorized = requiredPermission =>
       throw new CustomError(
         `User has been assigned a role of ${user.role.title.toLowerCase()}. Therefore, he doesn't have neccessary permissions to ${PERMISSIONS_DESCRIPTION[
           requiredPermission
-        ].toLowerCase()}.`,
+        ].toLowerCase()}`,
         403
       );
     }

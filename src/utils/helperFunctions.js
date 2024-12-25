@@ -27,7 +27,7 @@ export const formatCastError = error => {
   )} but received '${error.value}'`;
 };
 
-export const atleastOnePermission = permissions => permissions.length > 0;
+export const atLeastOnePermission = permissions => permissions.length > 0;
 
 export const arePermissionsValid = permissions => {
   const validPermissions = Object.values(PERMISSIONS);
@@ -66,7 +66,7 @@ export const formatOptions = options => {
   const optionsList = Object.values(options);
 
   if (!optionsList.length) {
-    return [];
+    return '';
   }
 
   if (optionsList.length === 1) {
