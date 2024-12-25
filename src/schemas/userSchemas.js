@@ -42,22 +42,19 @@ export const updateProfileSchema = customJoi
     'object.with': 'Confirm password is required',
   });
 
-export const userIdSchema = Joi.string()
-  .trim()
-  .empty(':userId')
-  .custom(validateObjectId)
-  .required()
-  .messages({
-    'any.required': 'User ID is required',
-    'string.empty': 'User ID cannot be empty',
-    'any.invalid': 'User ID is invalid. Expected a valid objectId',
-  });
-
 export const roleSchema = customJoi.object({
-  role: Joi.string().trim().required().custom(validateObjectId).messages({
+  role: Joi.string().trim().custom(validateObjectId).required().messages({
     'any.required': 'Role is required',
     'string.base': 'Role must be a string',
     'string.empty': 'Role cannot be empty',
     'any.invalid': 'Invalid ID format. Role must be a valid objectId',
+  }),
+});
+
+export const userIdSchema = Joi.object({
+  userId: Joi.string().trim().empty(':userId').custom(validateObjectId).required().messages({
+    'any.required': 'User ID is required',
+    'string.empty': 'User ID cannot be empty',
+    'any.invalid': 'User ID is invalid. Expected a valid objectId',
   }),
 });

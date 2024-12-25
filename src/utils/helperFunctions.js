@@ -34,6 +34,9 @@ export const arePermissionsValid = permissions => {
   return permissions.every(permission => validPermissions.includes(permission));
 };
 
+export const hasAllPermissions = permissions =>
+  Object.values(PERMISSIONS).every(permission => permissions.includes(permission));
+
 export const stripObjectKeys =
   (...keys) =>
   (value, _helpers) => {

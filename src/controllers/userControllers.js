@@ -2,14 +2,14 @@ import User from '../models/user.js';
 import Role from '../models/role.js';
 import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
-import { sendResponse } from '../utils/helperFunctions.js';
+import { sendResponse, hasAllPermissions } from '../utils/helperFunctions.js';
 import { clearCookieOptions } from '../utils/cookieOptions.js';
 import { uploadImage, deleteImage } from '../services/cloudinaryAPIs.js';
-import { FILE_UPLOAD } from '../constants/index.js';
+import { FILE_UPLOAD, PERMISSIONS } from '../constants/index.js';
 
 // Allows authenticated users to retrieve their profile
-export const getUserProfile = handleAsync(async (_req, res) => {
-  const { user } = res;
+export const getUserProfile = handleAsync(async (req, res) => {
+  const { user } = req;
 
   sendResponse(res, 200, 'Profile retrieved successfully', user);
 });
@@ -22,7 +22,10 @@ export const updateUserProfile = handleAsync(async (req, res) => {
     delete updates.password;
   }
 
-  const userByPhone = await User.findOne({ phone: updates.phone, _id: { $ne: req.user._id } });
+  const userByPhone = await User.findOne({
+    phone: updates.phone,
+    _id: { $ne: req.user._id },
+  });
 
   if (userByPhone) {
     throw new CustomError(
@@ -42,15 +45,18 @@ export const updateUserProfile = handleAsync(async (req, res) => {
 // Allows authenticated users to delete their account
 export const deleteAccount = handleAsync(async (req, res) => {
   const userId = req.user._id;
+  const userRole = req.user.role;
 
-  const deletedUser = await User.findByIdAndDelete(userId);
-
-  if (!deletedUser) {
-    throw new CustomError('User not found', 404);
+  if (userRole && hasAllPermissions(userRole.permissions) && userRole.userCount === 1) {
+    throw new CustomError(
+      `Currently, you are the only ${userRole.title.toLowerCase()}. Promote another user to the role of ${userRole.title.toLowerCase()} before deleting you account`
+    );
   }
 
-  if (deletedUser.role) {
-    await Role.findByIdAndUpdate(deletedUser.role, { $inc: { userCount: -1 } });
+  await User.findByIdAndDelete(userId);
+
+  if (userRole) {
+    await Role.findByIdAndUpdate(userRole._id, { $inc: { userCount: -1 } });
   }
 
   res.clearCookie('token', clearCookieOptions);
@@ -115,15 +121,17 @@ export const removeProfilePhoto = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'Profile photo removed successfully', updatedUser);
 });
 
-// Allows authenticated users to retrieve a list of all users
-export const getAllUsers = handleAsync(async (_req, res) => {
-  const users = await User.find({ isArchived: false })
+// Allows authenticated users to retrieve a list of other users
+export const getUsers = handleAsync(async (req, res) => {
+  const users = await User.find({
+    isArchived: false,
+    _id: { $ne: req.user._id },
+  })
     .select({
       fullname: 1,
       email: 1,
       phone: 1,
       role: 1,
-      avatar: 1,
       isActive: 1,
     })
     .populate('role');
