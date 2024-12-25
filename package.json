@@ -8,7 +8,7 @@
     "start": "pm2 start process.config.json",
     "stop": "pm2 stop process.config.json",
     "restart": "pm2 restart process.config.json",
-    "delete": "pm2 restart process.config.json"
+    "delete": "pm2 delete process.config.json"
   },
   "repository": {
     "type": "git",
