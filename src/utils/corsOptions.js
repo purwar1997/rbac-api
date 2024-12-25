@@ -1,4 +1,4 @@
-const whitelist = ['http://localhost:4000', 'http://api.rbac.shubhampurwar.in'];
+const whitelist = ['http://api.rbac.shubhampurwar.in'];
 
 const corsOptions = {
   origin: function (origin, callback) {
