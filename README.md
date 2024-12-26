@@ -16,27 +16,30 @@
 
 ## 1. Overview
 
-RESTful API for a Role-Based Access Control system where permissions to perform certain tasks can be granted to users by assigning them specific roles. Here we don't have to manage permissions for every user. Instead, we have to create roles, map permissions with them, and then assign those roles to users. All the users who have been assigned a specific role inherit all the permissions mapped to it.
+A RESTful API for a Role-Based Access Control system where permissions to perform certain tasks can be granted to users by assigning them specific roles. Here we don't have to manage permissions for every user. Instead, we have to create roles, map permissions with them, and then assign those roles to users. All the users who have been assigned a specific role inherit all the permissions mapped to it.
 
 This project is built using Express.js and MongoDB; all the APIs are well-documented using Swagger specification. User authentication has been implemented via JSON Web Tokens and the project is deployed on a DigitalOcean Droplet using Nginx as a web server.
 
 ## 2. Roles and Permissions
 
-I have hardcoded a total of 9 permissions that are shared differently between 3 roles - Viewer, Moderator and Admin. Users are allowed to perform certain tasks based on the role they are assigned. Users who haven't been assigned a role don't have any permissions and therefore can't perform any task.
+I have hardcoded a total of 12 permissions that are shared differently between 3 roles - Viewer, Moderator and Admin. Users are allowed to perform certain tasks based on the role they are assigned. Users who haven't been assigned a role don't have any permissions and therefore can't perform any task.
 
 This table encapsulates the relationship between different permissions and roles.
 
-| Permissions                  | Viewer | Moderator | Admin |
-| :--------------------------- | :----: | :-------: | :---: |
-| View user                    |  Yes   |    Yes    |  Yes  |
-| Assign role to user          |   No   |    Yes    |  Yes  |
-| Unassign role from user      |   No   |    Yes    |  Yes  |
-| Archive user                 |   No   |    Yes    |  Yes  |
-| Restore archived user        |   No   |    Yes    |  Yes  |
-| Update active status of user |   No   |    Yes    |  Yes  |
-| View role                    |  Yes   |    No     |  Yes  |
-| Add new role                 |   No   |    No     |  Yes  |
-| Edit existing role           |   No   |    No     |  Yes  |
+| Permissions             | Viewer | Moderator | Admin |
+| :---------------------- | :----: | :-------: | :---: |
+| View user               |  Yes   |    Yes    |  Yes  |
+| Assign role to user     |   No   |    Yes    |  Yes  |
+| Unassign role from user |   No   |    Yes    |  Yes  |
+| Activate user           |   No   |    Yes    |  Yes  |
+| Deactivate user         |   No   |    Yes    |  Yes  |
+| Archive user            |   No   |    Yes    |  Yes  |
+| Restore archived user   |   No   |    Yes    |  Yes  |
+| Delete user             |   No   |    Yes    |  Yes  |
+| View role               |  Yes   |    Yes    |  Yes  |
+| Add new role            |   No   |    No     |  Yes  |
+| Edit role               |   No   |    No     |  Yes  |
+| Delete role             |   No   |    No     |  Yes  |
 
 ## 3. Deployment and Documentation
 
@@ -66,7 +69,7 @@ APIs are documented using Swagger (OpenAPI) specification and all of them are li
 
 ## 5. Schemas and Routes
 
-This project includes two schemas and over 20 routes and controllers.
+This project consists of 2 schemas and 20+ routes and controllers.
 
 ### Authentication Routes
 
@@ -88,13 +91,15 @@ This project includes two schemas and over 20 routes and controllers.
 | Add profile photo       | POST   | /users/self/avatar           | Authentication                 |
 | Remove profile photo    | PUT    | /users/self/avatar           | Authentication                 |
 | Update profile photo    | POST   | /users/self/avatar/update    | Authentication                 |
-| Retrieve all users      | GET    | /users                       | Authentication                 |
+| Retrieve users          | GET    | /users                       | Authentication                 |
 | Retrieve user by ID     | GET    | /users/:userId               | Authentication + Authorization |
-| Update active status    | POST   | /users/:userId/status        | Authentication + Authorization |
-| Assign role to user     | PUT    | /users/:userId/role/assign   | Authentication + Authorization |
-| Unassign role from user | PUT    | /users/:userId/role/unassign | Authentication + Authorization |
-| Archive user            | PUT    | /users/:userId/archive       | Authentication + Authorization |
-| Restore archived user   | PUT    | /users/:userId/restore       | Authentication + Authorization |
+| Delete user             | DELETE | /users/:userId               | Authentication + Authorization |
+| Assign role to user     | PATCH  | /users/:userId/role/assign   | Authentication + Authorization |
+| Unassign role from user | PATCH  | /users/:userId/role/unassign | Authentication + Authorization |
+| Activate user           | PATCH  | /users/:userId/activate      | Authentication + Authorization |
+| Deactivate user         | PATCH  | /users/:userId/deactivate    | Authentication + Authorization |
+| Archive user            | PATCH  | /users/:userId/archive       | Authentication + Authorization |
+| Restore archived user   | PATCH  | /users/:userId/restore       | Authentication + Authorization |
 
 ### Role Routes
 
@@ -104,3 +109,4 @@ This project includes two schemas and over 20 routes and controllers.
 | Add new role        | POST   | /roles         | Authentication + Authorization |
 | Retrieve role by ID | GET    | /roles/:roleId | Authentication + Authorization |
 | Update role         | PUT    | /roles/:roleId | Authentication + Authorization |
+| Delete role         | DELETE | /roles/:roleId | Authentication + Authorization |
