@@ -94,12 +94,12 @@ This project consists of 2 schemas and 20+ routes and controllers.
 | Retrieve users          | GET    | /users                       | Authentication                 |
 | Retrieve user by ID     | GET    | /users/:userId               | Authentication + Authorization |
 | Delete user             | DELETE | /users/:userId               | Authentication + Authorization |
-| Assign role to user     | PATCH  | /users/:userId/role/assign   | Authentication + Authorization |
-| Unassign role from user | PATCH  | /users/:userId/role/unassign | Authentication + Authorization |
-| Activate user           | PATCH  | /users/:userId/activate      | Authentication + Authorization |
-| Deactivate user         | PATCH  | /users/:userId/deactivate    | Authentication + Authorization |
-| Archive user            | PATCH  | /users/:userId/archive       | Authentication + Authorization |
-| Restore archived user   | PATCH  | /users/:userId/restore       | Authentication + Authorization |
+| Assign role to user     | PUT    | /users/:userId/role/assign   | Authentication + Authorization |
+| Unassign role from user | PUT    | /users/:userId/role/unassign | Authentication + Authorization |
+| Activate user           | PUT    | /users/:userId/activate      | Authentication + Authorization |
+| Deactivate user         | PUT    | /users/:userId/deactivate    | Authentication + Authorization |
+| Archive user            | PUT    | /users/:userId/archive       | Authentication + Authorization |
+| Restore archived user   | PUT    | /users/:userId/restore       | Authentication + Authorization |
 
 ### Role Routes
 

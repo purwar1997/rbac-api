@@ -61,7 +61,7 @@ router
 
 router
   .route('/:userId/role/assign')
-  .patch(
+  .put(
     isAuthenticated,
     isAuthorized(PERMISSIONS.ROLE.ASSIGN),
     validatePathParams(userIdSchema),
@@ -72,7 +72,7 @@ router
 
 router
   .route('/:userId/role/unassign')
-  .patch(
+  .put(
     isAuthenticated,
     isAuthorized(PERMISSIONS.ROLE.UNASSIGN),
     validatePathParams(userIdSchema),
@@ -82,7 +82,7 @@ router
 
 router
   .route('/:userId/activate')
-  .patch(
+  .put(
     isAuthenticated,
     isAuthorized(PERMISSIONS.USER.ACTIVATE),
     validatePathParams(userIdSchema),
@@ -92,7 +92,7 @@ router
 
 router
   .route('/:userId/deactivate')
-  .patch(
+  .put(
     isAuthenticated,
     isAuthorized(PERMISSIONS.USER.DEACTIVATE),
     validatePathParams(userIdSchema),
@@ -102,7 +102,7 @@ router
 
 router
   .route('/:userId/archive')
-  .patch(
+  .put(
     isAuthenticated,
     isAuthorized(PERMISSIONS.USER.ARCHIVE),
     validatePathParams(userIdSchema),
@@ -112,7 +112,7 @@ router
 
 router
   .route('/:userId/restore')
-  .patch(
+  .put(
     isAuthenticated,
     isAuthorized(PERMISSIONS.USER.RESTORE),
     validatePathParams(userIdSchema),
