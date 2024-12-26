@@ -336,22 +336,29 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    fullname:
-                      type: string
-                    email:
-                      type: string
-                    phone:
-                      type: string
-                    role:
-                      $ref: '#/components/schemas/UserWithRole'
-                    isActive:
-                      type: boolean
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        fullname:
+                          type: string
+                        email:
+                          type: string
+                        phone:
+                          type: string
+                        isActive:
+                          type: boolean
+                        role:
+                          $ref: '#/components/schemas/UserWithRole'
 
   /users/{userId}:
     get:
@@ -381,8 +388,28 @@ paths:
                   data:
                     $ref: '#/components/schemas/UserWithRole'
 
+    delete:
+      tags:
+        - Users
+      description: Allows authorized users to delete another user
+      operationId: deleteUser
+      parameters:
+        - in: path
+          name: userId
+          description: ID of the user that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User deletion success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+
   /users/{userId}/role/assign:
-    put:
+    patch:
       tags:
         - Users
       description: Allows authorized users to assign a role to another user
@@ -420,7 +447,7 @@ paths:
                     $ref: '#/components/schemas/UserWithRole'
 
   /users/{userId}/role/unassign:
-    put:
+    patch:
       tags:
         - Users
       description: Allows authorized users to unassign a role from another user
@@ -428,7 +455,7 @@ paths:
       parameters:
         - in: path
           name: userId
-          description: ID of the user that needs to be unassigned a role
+          description: ID of the user whose role needs to be unassigned
           required: true
           schema:
             type: string
@@ -447,22 +474,50 @@ paths:
                   data:
                     $ref: '#/components/schemas/User'
 
-  /users/{userId}/status:
-    post:
+  /users/{userId}/activate:
+    patch:
       tags:
         - Users
-      description: Allows authorized users to update active status of another user
-      operationId: updateActiveStatus
+      description: Allows authorized users to activate another user
+      operationId: activateUser
       parameters:
         - in: path
           name: userId
-          description: ID of the user whose active status needs to be updated
+          description: ID of the user that needs to be activated
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: A JSON object containing an updated user
+          description: A JSON object containing an active user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
+  /users/{userId}/deactivate:
+    patch:
+      tags:
+        - Users
+      description: Allows authorized users to deactivate another user
+      operationId: deactivateUser
+      parameters:
+        - in: path
+          name: userId
+          description: ID of the user that needs to be deactivated
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing an inactive user
           content:
             application/json:
               schema:
@@ -476,7 +531,7 @@ paths:
                     $ref: '#/components/schemas/User'
 
   /users/{userId}/archive:
-    put:
+    patch:
       tags:
         - Users
       description: Allows authorized users to archive another user
@@ -504,7 +559,7 @@ paths:
                     $ref: '#/components/schemas/User'
 
   /users/{userId}/restore:
-    put:
+    patch:
       tags:
         - Users
       description: Allows authorized users to restore an archived user
@@ -777,11 +832,14 @@ components:
         type: string
         enum:
           - view_user
+          - activate_user
+          - deactivate_user
           - archive_user
           - restore_user
-          - update_status
+          - delete_user
           - view_role
           - add_role
           - edit_role
+          - delete_role
           - assign_role
           - unassign_role
