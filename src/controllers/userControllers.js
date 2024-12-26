@@ -5,7 +5,7 @@ import CustomError from '../utils/CustomError.js';
 import { sendResponse, isOnlyRootUser } from '../utils/helperFunctions.js';
 import { clearCookieOptions } from '../utils/cookieOptions.js';
 import { uploadImage, deleteImage } from '../services/cloudinaryAPIs.js';
-import { FILE_UPLOAD, PERMISSIONS } from '../constants/index.js';
+import { FILE_UPLOAD } from '../constants/index.js';
 
 // Allows authenticated users to retrieve their profile
 export const getUserProfile = handleAsync(async (req, res) => {
@@ -48,7 +48,8 @@ export const deleteAccount = handleAsync(async (req, res) => {
 
   if (isOnlyRootUser(user)) {
     throw new CustomError(
-      `Currently, you are the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before deleting you account`
+      `Currently, you are the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before deleting you account`,
+      403
     );
   }
 
@@ -78,6 +79,7 @@ export const addProfilePhoto = handleAsync(async (req, res) => {
     publicId: response.public_id,
   };
 
+  user.role = user.role?._id;
   const updatedUser = await user.save();
 
   sendResponse(res, 200, 'Profile photo added successfully', updatedUser);
@@ -98,6 +100,7 @@ export const updateProfilePhoto = handleAsync(async (req, res) => {
     publicId: response.public_id,
   };
 
+  user.role = user.role?._id;
   const updatedUser = await user.save();
 
   sendResponse(res, 200, 'Profile photo updated successfully', updatedUser);
@@ -328,5 +331,5 @@ export const deleteUser = handleAsync(async (req, res) => {
     await Role.findByIdAndUpdate(user.role._id, { $inc: { userCount: -1 } });
   }
 
-  sendResponse(res, 200, 'User deleted successfully');
+  sendResponse(res, 200, 'User deleted successfully', userId);
 });
