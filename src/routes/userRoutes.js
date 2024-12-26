@@ -2,6 +2,7 @@ import express from 'express';
 import { isAuthenticated, isAuthorized } from '../middlewares/authMiddlewares.js';
 import { validatePathParams, validatePayload } from '../middlewares/requestValidators.js';
 import { parseFormData } from '../middlewares/parseFormData.js';
+import { checkUserSelfAction } from '../middlewares/checkUserSelfAction.js';
 import { updateProfileSchema, userIdSchema, roleSchema } from '../schemas/userSchemas.js';
 import {
   getUserProfile,
@@ -10,11 +11,12 @@ import {
   addProfilePhoto,
   updateProfilePhoto,
   removeProfilePhoto,
-  getAllUsers,
+  getUsers,
   getUserById,
   assignRoleToUser,
   unassignRoleFromUser,
-  updateActiveStatus,
+  activateUser,
+  deactivateUser,
   archiveUser,
   restoreArchivedUser,
 } from '../controllers/userControllers.js';
@@ -22,7 +24,7 @@ import { PERMISSIONS, FILE_UPLOAD } from '../constants/index.js';
 
 const router = express.Router();
 
-router.route('/').get(isAuthenticated, getAllUsers);
+router.route('/').get(isAuthenticated, getUsers);
 
 router
   .route('/self')
@@ -49,54 +51,69 @@ router
   .route('/:userId')
   .get(
     isAuthenticated,
-    isAuthorized(PERMISSIONS.VIEW_USER),
+    isAuthorized(PERMISSIONS.USER.VIEW),
     validatePathParams(userIdSchema),
     getUserById
   );
 
 router
   .route('/:userId/role/assign')
-  .put(
+  .patch(
     isAuthenticated,
-    isAuthorized(PERMISSIONS.ASSIGN_ROLE),
+    isAuthorized(PERMISSIONS.ROLE.ASSIGN),
     validatePathParams(userIdSchema),
     validatePayload(roleSchema),
+    checkUserSelfAction(PERMISSIONS.ROLE.ASSIGN),
     assignRoleToUser
   );
 
 router
   .route('/:userId/role/unassign')
-  .put(
+  .patch(
     isAuthenticated,
-    isAuthorized(PERMISSIONS.UNASSIGN_ROLE),
+    isAuthorized(PERMISSIONS.ROLE.UNASSIGN),
     validatePathParams(userIdSchema),
+    checkUserSelfAction(PERMISSIONS.ROLE.UNASSIGN),
     unassignRoleFromUser
   );
 
 router
-  .route('/:userId/status')
-  .post(
+  .route('/:userId/activate')
+  .patch(
     isAuthenticated,
-    isAuthorized(PERMISSIONS.UPDATE_STATUS),
+    isAuthorized(PERMISSIONS.USER.ACTIVATE),
     validatePathParams(userIdSchema),
-    updateActiveStatus
+    checkUserSelfAction(PERMISSIONS.USER.ACTIVATE),
+    activateUser
+  );
+
+router
+  .route('/:userId/deactivate')
+  .patch(
+    isAuthenticated,
+    isAuthorized(PERMISSIONS.USER.DEACTIVATE),
+    validatePathParams(userIdSchema),
+    checkUserSelfAction(PERMISSIONS.USER.DEACTIVATE),
+    deactivateUser
   );
 
 router
   .route('/:userId/archive')
-  .put(
+  .patch(
     isAuthenticated,
-    isAuthorized(PERMISSIONS.ARCHIVE_USER),
+    isAuthorized(PERMISSIONS.USER.ARCHIVE),
     validatePathParams(userIdSchema),
+    checkUserSelfAction(PERMISSIONS.USER.ARCHIVE),
     archiveUser
   );
 
 router
   .route('/:userId/restore')
-  .put(
+  .patch(
     isAuthenticated,
-    isAuthorized(PERMISSIONS.RESTORE_USER),
+    isAuthorized(PERMISSIONS.USER.RESTORE),
     validatePathParams(userIdSchema),
+    checkUserSelfAction(PERMISSIONS.USER.RESTORE),
     restoreArchivedUser
   );
 

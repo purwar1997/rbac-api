@@ -34,9 +34,6 @@ export const arePermissionsValid = permissions => {
   return permissions.every(permission => validPermissions.includes(permission));
 };
 
-export const hasAllPermissions = permissions =>
-  Object.values(PERMISSIONS).every(permission => permissions.includes(permission));
-
 export const stripObjectKeys =
   (...keys) =>
   (value, _helpers) => {
@@ -107,3 +104,28 @@ export const capitalizeFirstLetter = str => {
 };
 
 export const singularize = str => pluralize.singular(str);
+
+export const hasAllPermissions = permissions =>
+  Object.values(PERMISSIONS).every(permission => permissions.includes(permission));
+
+export const isOnlyRootUser = user => {
+  let isRootUser = false;
+
+  if (user.role && hasAllPermissions(user.role.permissions) && user.role.userCount === 1) {
+    isRootUser = true;
+  }
+
+  return isRootUser;
+};
+
+export const deepFreeze = obj => {
+  Object.freeze(obj);
+
+  Object.keys(obj).forEach(key => {
+    if (typeof obj[key] === 'object' && obj[key] !== null && !Object.isFrozen(obj[key])) {
+      deepFreeze(obj[key]);
+    }
+  });
+
+  return obj;
+};

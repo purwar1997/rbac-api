@@ -2,7 +2,7 @@ import User from '../models/user.js';
 import Role from '../models/role.js';
 import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
-import { sendResponse, hasAllPermissions } from '../utils/helperFunctions.js';
+import { sendResponse, isOnlyRootUser } from '../utils/helperFunctions.js';
 import { clearCookieOptions } from '../utils/cookieOptions.js';
 import { uploadImage, deleteImage } from '../services/cloudinaryAPIs.js';
 import { FILE_UPLOAD, PERMISSIONS } from '../constants/index.js';
@@ -44,19 +44,18 @@ export const updateUserProfile = handleAsync(async (req, res) => {
 
 // Allows authenticated users to delete their account
 export const deleteAccount = handleAsync(async (req, res) => {
-  const userId = req.user._id;
-  const userRole = req.user.role;
+  const { user } = req;
 
-  if (userRole && hasAllPermissions(userRole.permissions) && userRole.userCount === 1) {
+  if (isOnlyRootUser(user)) {
     throw new CustomError(
-      `Currently, you are the only ${userRole.title.toLowerCase()}. Promote another user to the role of ${userRole.title.toLowerCase()} before deleting you account`
+      `Currently, you are the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before deleting you account`
     );
   }
 
-  await User.findByIdAndDelete(userId);
+  await User.findByIdAndDelete(user._id);
 
-  if (userRole) {
-    await Role.findByIdAndUpdate(userRole._id, { $inc: { userCount: -1 } });
+  if (user.role) {
+    await Role.findByIdAndUpdate(user.role._id, { $inc: { userCount: -1 } });
   }
 
   res.clearCookie('token', clearCookieOptions);
@@ -157,7 +156,7 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
   const { role: roleId } = req.body;
 
-  const user = await User.findById(userId);
+  const user = await User.findById(userId).populate('role');
 
   if (!user) {
     throw new CustomError('User not found', 404);
@@ -169,6 +168,13 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
     throw new CustomError('Provided role does not exist', 404);
   }
 
+  if (isOnlyRootUser(user) && user.role._id.toString() !== roleId) {
+    throw new CustomError(
+      `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before assigning new role to this user`,
+      403
+    );
+  }
+
   const updatedUser = await User.findByIdAndUpdate(
     userId,
     { role: roleId },
@@ -178,7 +184,7 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
   await Role.findByIdAndUpdate(roleId, { $inc: { userCount: 1 } });
 
   if (user.role) {
-    await Role.findByIdAndUpdate(user.role, { $inc: { userCount: -1 } });
+    await Role.findByIdAndUpdate(user.role._id, { $inc: { userCount: -1 } });
   }
 
   sendResponse(res, 200, 'Role assigned to user successfully', updatedUser);
@@ -188,52 +194,96 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
 export const unassignRoleFromUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
-  let user = await User.findById(userId);
+  const user = await User.findById(userId).populate('role');
 
   if (!user) {
     throw new CustomError('User not found', 404);
   }
 
-  if (user.role) {
-    user = await User.findByIdAndUpdate(userId, { $unset: { role: 1 } }, { new: true });
-    await Role.findByIdAndUpdate(user.role, { $inc: { userCount: -1 } });
+  if (!user.role) {
+    throw new CustomError("User hasn't been assigned a role", 409);
   }
+
+  if (isOnlyRootUser(user)) {
+    throw new CustomError(
+      `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before unassigning role from this user`,
+      403
+    );
+  }
+
+  user.role = undefined;
+  const updatedUser = await user.save();
+
+  await Role.findByIdAndUpdate(user.role._id, { $inc: { userCount: -1 } });
 
   sendResponse(res, 200, 'Role unassigned from user successfully', updatedUser);
 });
 
-// Allows authorized users to update active status of another user
-export const updateActiveStatus = handleAsync(async (req, res) => {
+// Allows authorized users to activate another user
+export const activateUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
-  const user = await User.findById(userId);
+  const activeUser = await User.findByIdAndUpdate(
+    userId,
+    { isActive: true },
+    { runValidators: true, new: true }
+  );
+
+  if (!activeUser) {
+    throw new CustomError('User not found', 404);
+  }
+
+  sendResponse(res, 200, 'User activated successfully', activeUser);
+});
+
+// Allows authorized users to deactivate another user
+export const deactivateUser = handleAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findById(userId).populate('role');
 
   if (!user) {
     throw new CustomError('User not found', 404);
   }
 
-  const userWithUpdatedStatus = await User.findByIdAndUpdate(
+  if (isOnlyRootUser(user)) {
+    throw new CustomError(
+      `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before deactivating this user`,
+      403
+    );
+  }
+
+  const inactiveUser = await User.findByIdAndUpdate(
     userId,
-    { isActive: !user.isActive },
+    { isActive: false },
     { runValidators: true, new: true }
   );
 
-  sendResponse(res, 200, 'Active status of a user updated successfully', userWithUpdatedStatus);
+  sendResponse(res, 200, 'User deactivated successfully', inactiveUser);
 });
 
 // Allows authorized users to archive another user
 export const archiveUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
+  const user = await User.findById(userId).populate('role');
+
+  if (!user) {
+    throw new CustomError('User not found', 404);
+  }
+
+  if (isOnlyRootUser(user)) {
+    throw new CustomError(
+      `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before archiving this user`,
+      403
+    );
+  }
+
   const archivedUser = await User.findByIdAndUpdate(
     userId,
     { isArchived: true },
     { runValidators: true, new: true }
   );
-
-  if (!archivedUser) {
-    throw new CustomError('User not found', 404);
-  }
 
   sendResponse(res, 200, 'User archived successfully', archivedUser);
 });

@@ -1,3 +1,5 @@
+import { deepFreeze } from '../utils/helperFunctions.js';
+
 export const STORAGE = Object.freeze({
   DATABASE_NAME: 'rbac_system',
   CLOUD_NAME: 'dlqnx5pot',
@@ -15,28 +17,34 @@ export const REGEX = Object.freeze({
   IMAGE_URL: /^https?:\/\/.+\.(jpg|jpeg|png|gif)$/,
 });
 
-export const PERMISSIONS = Object.freeze({
-  VIEW_USER: 'view_user',
-  ARCHIVE_USER: 'archive_user',
-  RESTORE_USER: 'restore_user',
-  UPDATE_STATUS: 'update_status',
-  VIEW_ROLE: 'view_role',
-  ADD_ROLE: 'add_role',
-  EDIT_ROLE: 'edit_role',
-  ASSIGN_ROLE: 'assign_role',
-  UNASSIGN_ROLE: 'unassign_role',
+export const PERMISSIONS = deepFreeze({
+  USER: {
+    VIEW: 'view_user',
+    ACTIVATE: 'activate_user',
+    DEACTIVATE: 'deactivate_user',
+    ARCHIVE: 'archive_user',
+    RESTORE: 'restore_user',
+  },
+  ROLE: {
+    VIEW: 'view_role',
+    ADD: 'add_role',
+    EDIT: 'edit_role',
+    ASSIGN: 'assign_role',
+    UNASSIGN: 'unassign_role',
+  },
 });
 
 export const PERMISSIONS_DESCRIPTION = Object.freeze({
-  [PERMISSIONS.VIEW_USER]: 'View a user',
-  [PERMISSIONS.ARCHIVE_USER]: 'Archive a user',
-  [PERMISSIONS.RESTORE_USER]: 'Restore an archived user',
-  [PERMISSIONS.UPDATE_STATUS]: 'Update active status of a user',
-  [PERMISSIONS.VIEW_ROLE]: 'View a role',
-  [PERMISSIONS.ADD_ROLE]: 'Add a new role',
-  [PERMISSIONS.EDIT_ROLE]: 'Edit a role',
-  [PERMISSIONS.ASSIGN_ROLE]: 'Assign role to the user',
-  [PERMISSIONS.UNASSIGN_ROLE]: 'Unassign role from the user',
+  [PERMISSIONS.USER.VIEW]: 'View a user',
+  [PERMISSIONS.USER.ACTIVATE]: 'Activate a user',
+  [PERMISSIONS.USER.DEACTIVATE]: 'Deactivate a user',
+  [PERMISSIONS.USER.ARCHIVE]: 'Archive a user',
+  [PERMISSIONS.USER.RESTORE]: 'Restore an archived user',
+  [PERMISSIONS.ROLE.VIEW]: 'View a role',
+  [PERMISSIONS.ROLE.ADD]: 'Add a new role',
+  [PERMISSIONS.ROLE.EDIT]: 'Edit a role',
+  [PERMISSIONS.ROLE.ASSIGN]: 'Assign role to the user',
+  [PERMISSIONS.ROLE.UNASSIGN]: 'Unassign role from the user',
 });
 
 export const FILE_UPLOAD = Object.freeze({
