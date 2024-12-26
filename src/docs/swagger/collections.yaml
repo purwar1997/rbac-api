@@ -177,7 +177,7 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/User'
+                    $ref: '#/components/schemas/UserWithRole'
 
     put:
       tags:
@@ -215,7 +215,7 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/User'
+                    $ref: '#/components/schemas/UserWithRole'
 
     delete:
       tags:

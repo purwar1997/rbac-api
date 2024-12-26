@@ -37,7 +37,7 @@ export const updateUserProfile = handleAsync(async (req, res) => {
   const updatedUser = await User.findByIdAndUpdate(req.user._id, updates, {
     runValidators: true,
     new: true,
-  });
+  }).populate('role');
 
   sendResponse(res, 200, 'Profile updated successfully', updatedUser);
 });
