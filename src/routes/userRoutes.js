@@ -19,6 +19,7 @@ import {
   deactivateUser,
   archiveUser,
   restoreArchivedUser,
+  deleteUser,
 } from '../controllers/userControllers.js';
 import { PERMISSIONS, FILE_UPLOAD } from '../constants/index.js';
 
@@ -49,11 +50,13 @@ router
 
 router
   .route('/:userId')
-  .get(
-    isAuthenticated,
-    isAuthorized(PERMISSIONS.USER.VIEW),
+  .all(isAuthenticated)
+  .get(isAuthorized(PERMISSIONS.USER.VIEW), validatePathParams(userIdSchema), getUserById)
+  .delete(
+    isAuthorized(PERMISSIONS.USER.DELETE),
     validatePathParams(userIdSchema),
-    getUserById
+    checkUserSelfAction(PERMISSIONS.USER.DELETE),
+    deleteUser
   );
 
 router

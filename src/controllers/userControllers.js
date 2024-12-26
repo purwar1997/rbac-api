@@ -304,3 +304,29 @@ export const restoreArchivedUser = handleAsync(async (req, res) => {
 
   sendResponse(res, 200, 'Archived user restored successfully', restoredUser);
 });
+
+// Allows authorized users to delete another user
+export const deleteUser = handleAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findById(userId).populate('role');
+
+  if (!user) {
+    throw new CustomError('User not found', 404);
+  }
+
+  if (isOnlyRootUser(user)) {
+    throw new CustomError(
+      `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before deleting this user`,
+      403
+    );
+  }
+
+  await User.findByIdAndDelete(userId);
+
+  if (user.role) {
+    await Role.findByIdAndUpdate(user.role._id, { $inc: { userCount: -1 } });
+  }
+
+  sendResponse(res, 200, 'User deleted successfully');
+});

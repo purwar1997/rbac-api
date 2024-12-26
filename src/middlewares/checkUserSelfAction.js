@@ -15,6 +15,8 @@ const SELF_ACTION_ERROR_MESSAGES = Object.freeze({
     'You cannot archive yourself. This action can only be performed by other users',
   [PERMISSIONS.USER.RESTORE]:
     'You cannot restore yourself. This action can only be performed by other users',
+  [PERMISSIONS.USER.DELETE]:
+    'You cannot delete yourself. This action can only be performed by other users',
 });
 
 export const checkUserSelfAction = actionType =>

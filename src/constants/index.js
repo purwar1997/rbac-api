@@ -24,6 +24,7 @@ export const PERMISSIONS = deepFreeze({
     DEACTIVATE: 'deactivate_user',
     ARCHIVE: 'archive_user',
     RESTORE: 'restore_user',
+    DELETE: 'delete_user',
   },
   ROLE: {
     VIEW: 'view_role',
@@ -40,6 +41,7 @@ export const PERMISSIONS_DESCRIPTION = Object.freeze({
   [PERMISSIONS.USER.DEACTIVATE]: 'Deactivate a user',
   [PERMISSIONS.USER.ARCHIVE]: 'Archive a user',
   [PERMISSIONS.USER.RESTORE]: 'Restore an archived user',
+  [PERMISSIONS.USER.DELETE]: 'Delete a user',
   [PERMISSIONS.ROLE.VIEW]: 'View a role',
   [PERMISSIONS.ROLE.ADD]: 'Add a new role',
   [PERMISSIONS.ROLE.EDIT]: 'Edit a role',
