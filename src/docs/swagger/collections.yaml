@@ -358,7 +358,7 @@ paths:
                         isActive:
                           type: boolean
                         role:
-                          $ref: '#/components/schemas/UserWithRole'
+                          $ref: '#/components/schemas/Role'
 
   /users/{userId}:
     get:
@@ -402,14 +402,21 @@ paths:
             type: string
       responses:
         '200':
-          description: User deletion success
+          description: A JSON object containing ID of the deleted user
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Success'
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: string
 
   /users/{userId}/role/assign:
-    patch:
+    put:
       tags:
         - Users
       description: Allows authorized users to assign a role to another user
@@ -447,7 +454,7 @@ paths:
                     $ref: '#/components/schemas/UserWithRole'
 
   /users/{userId}/role/unassign:
-    patch:
+    put:
       tags:
         - Users
       description: Allows authorized users to unassign a role from another user
@@ -475,7 +482,7 @@ paths:
                     $ref: '#/components/schemas/User'
 
   /users/{userId}/activate:
-    patch:
+    put:
       tags:
         - Users
       description: Allows authorized users to activate another user
@@ -503,7 +510,7 @@ paths:
                     $ref: '#/components/schemas/User'
 
   /users/{userId}/deactivate:
-    patch:
+    put:
       tags:
         - Users
       description: Allows authorized users to deactivate another user
@@ -531,7 +538,7 @@ paths:
                     $ref: '#/components/schemas/User'
 
   /users/{userId}/archive:
-    patch:
+    put:
       tags:
         - Users
       description: Allows authorized users to archive another user
@@ -559,7 +566,7 @@ paths:
                     $ref: '#/components/schemas/User'
 
   /users/{userId}/restore:
-    patch:
+    put:
       tags:
         - Users
       description: Allows authorized users to restore an archived user
