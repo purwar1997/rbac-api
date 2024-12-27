@@ -22,7 +22,7 @@ router
 router
   .route('/:roleId')
   .all(isAuthenticated)
-  .get(isAuthorized(PERMISSIONS.ROLE.VIEW, validatePathParams(roleIdSchema), getRoleById))
+  .get(isAuthorized(PERMISSIONS.ROLE.VIEW), validatePathParams(roleIdSchema), getRoleById)
   .put(
     isAuthorized(PERMISSIONS.ROLE.UPDATE),
     validatePathParams(roleIdSchema),

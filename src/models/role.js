@@ -18,12 +18,8 @@ const roleSchema = new Schema(
       match: [REGEX.NAME, 'Role title must contain only letters'],
     },
     permissions: {
-      type: [
-        {
-          type: String,
-          unique: true,
-        },
-      ],
+      type: [String],
+      set: value => [...new Set(value)],
       validate: [
         {
           validator: atLeastOnePermission,

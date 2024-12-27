@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import pluralize from 'pluralize';
 import { PERMISSIONS } from '../constants/index.js';
 
 export const sendResponse = (res, statusCode, message, data) => {
@@ -7,6 +8,20 @@ export const sendResponse = (res, statusCode, message, data) => {
     message,
     data,
   });
+};
+
+export const flattenObject = (obj, prefix = '') => {
+  return Object.keys(obj).reduce((acc, key) => {
+    const newKey = prefix ? `${prefix}.${key}` : key;
+
+    if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+      Object.assign(acc, flattenObject(obj[key], newKey));
+    } else {
+      acc[newKey] = obj[key];
+    }
+
+    return acc;
+  }, {});
 };
 
 export const lowercaseFirstLetter = str => {
@@ -30,7 +45,7 @@ export const formatCastError = error => {
 export const atLeastOnePermission = permissions => permissions.length > 0;
 
 export const checkValidPermissions = permissions => {
-  const validPermissions = Object.values(PERMISSIONS);
+  const validPermissions = Object.values(flattenObject(PERMISSIONS));
   return permissions.every(permission => validPermissions.includes(permission));
 };
 
@@ -63,7 +78,7 @@ export const checkPermissions = (value, helpers) => {
 };
 
 export const formatOptions = options => {
-  const optionsList = Object.values(options);
+  const optionsList = Object.values(flattenObject(options));
 
   if (!optionsList.length) {
     return '';
@@ -78,7 +93,7 @@ export const formatOptions = options => {
   }
 
   const lastOption = optionsList.pop();
-  return optionsList.join(', ') + 'and ' + lastOption;
+  return optionsList.join(', ') + ' and ' + lastOption;
 };
 
 export const formatBytes = (bytes, decimals = 2) => {
@@ -106,7 +121,7 @@ export const capitalizeFirstLetter = str => {
 export const singularize = str => pluralize.singular(str);
 
 export const hasAllPermissions = permissions =>
-  Object.values(PERMISSIONS).every(permission => permissions.includes(permission));
+  Object.values(flattenObject(PERMISSIONS)).every(permission => permissions.includes(permission));
 
 export const isOnlyRootUser = user => {
   let isRootUser = false;
