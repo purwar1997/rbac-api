@@ -29,7 +29,7 @@ export const formatCastError = error => {
 
 export const atLeastOnePermission = permissions => permissions.length > 0;
 
-export const arePermissionsValid = permissions => {
+export const checkValidPermissions = permissions => {
   const validPermissions = Object.values(PERMISSIONS);
   return permissions.every(permission => validPermissions.includes(permission));
 };
@@ -55,11 +55,11 @@ export const validateObjectId = (value, helpers) => {
 export const checkPermissions = (value, helpers) => {
   const permissions = [...new Set(value)];
 
-  if (!arePermissionsValid(permissions)) {
+  if (!checkValidPermissions(permissions)) {
     return helpers.error('any.invalid');
   }
 
-  return value;
+  return permissions;
 };
 
 export const formatOptions = options => {

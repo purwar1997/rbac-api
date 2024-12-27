@@ -20,21 +20,18 @@ export const roleBodySchema = customJoi.object({
     .messages({
       'any.required': 'Permissions are required',
       'array.base': 'Permissions must be an array',
-      'array.min': 'Permissions array must contain atleast one value',
+      'array.min': 'Permissions array must contain at least one value',
       'array.includes': 'Permissions array must contain only strings',
-      'any.invalid': `Provided invalid permissions. Valid permissions are ${formatOptions(
+      'any.invalid': `Provided invalid permissions. Valid permissions are: ${formatOptions(
         PERMISSIONS
       )}`,
     }),
 });
 
-export const roleIdSchema = Joi.string()
-  .trim()
-  .empty(':roleId')
-  .required()
-  .custom(validateObjectId)
-  .messages({
+export const roleIdSchema = Joi.object({
+  roleId: Joi.string().trim().empty(':roleId').required().custom(validateObjectId).messages({
     'any.required': 'Role ID is required',
     'string.empty': 'Role ID cannot be empty',
     'any.invalid': 'Invalid ID format. Expected a valid objectId',
-  });
+  }),
+});

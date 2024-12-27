@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import {
   atLeastOnePermission,
-  arePermissionsValid,
+  checkValidPermissions,
   formatOptions,
 } from '../utils/helperFunctions.js';
 import { PERMISSIONS, REGEX } from '../constants/index.js';
@@ -18,15 +18,19 @@ const roleSchema = new Schema(
       match: [REGEX.NAME, 'Role title must contain only letters'],
     },
     permissions: {
-      type: [String],
-      set: values => [...new Set(values)],
+      type: [
+        {
+          type: String,
+          unique: true,
+        },
+      ],
       validate: [
         {
           validator: atLeastOnePermission,
           message: 'Role must have at least one permission',
         },
         {
-          validator: arePermissionsValid,
+          validator: checkValidPermissions,
           message: `Provided invalid permissions. Valid permissions are: ${formatOptions(
             PERMISSIONS
           )}`,

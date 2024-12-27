@@ -29,7 +29,8 @@ export const PERMISSIONS = deepFreeze({
   ROLE: {
     VIEW: 'view_role',
     ADD: 'add_role',
-    EDIT: 'edit_role',
+    UPDATE: 'update_role',
+    DELETE: 'delete_role',
     ASSIGN: 'assign_role',
     UNASSIGN: 'unassign_role',
   },
@@ -44,7 +45,8 @@ export const PERMISSIONS_DESCRIPTION = Object.freeze({
   [PERMISSIONS.USER.DELETE]: 'Delete a user',
   [PERMISSIONS.ROLE.VIEW]: 'View a role',
   [PERMISSIONS.ROLE.ADD]: 'Add a new role',
-  [PERMISSIONS.ROLE.EDIT]: 'Edit a role',
+  [PERMISSIONS.ROLE.UPDATE]: 'Update a role',
+  [PERMISSIONS.ROLE.DELETE]: 'Delete a role',
   [PERMISSIONS.ROLE.ASSIGN]: 'Assign role to the user',
   [PERMISSIONS.ROLE.UNASSIGN]: 'Unassign role from the user',
 });

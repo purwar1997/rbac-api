@@ -1,9 +1,10 @@
 import Role from '../models/role.js';
+import User from '../models/user.js';
 import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
-import { sendResponse } from '../utils/helperFunctions.js';
+import { hasAllPermissions, sendResponse } from '../utils/helperFunctions.js';
 
-// Allows authenticated users to retrieve a list of all roles
+// Allows authenticated users to retrieve all roles
 export const getAllRoles = handleAsync(async (_req, res) => {
   const roles = await Role.find().select({
     title: 1,
@@ -40,22 +41,30 @@ export const addNewRole = handleAsync(async (req, res) => {
     );
   }
 
-  const roleByPermissions = await Role.findOne({ permissions: { $eq: permissions } });
+  const roleByPermissions = await Role.findOne({
+    permissions: {
+      $all: permissions,
+      $size: permissions.length,
+    },
+  });
 
   if (roleByPermissions) {
     throw new CustomError(
-      `${roleByPermissions.title} role by these same permissions already exists. Either use it or provide different permissions`,
+      `${roleByPermissions.title} role with the same permissions already exists. Either use it or provide different permissions`,
       409
     );
   }
 
-  const newRole = await Role.create(req.body);
+  const newRole = await Role.create({
+    title,
+    permissions: [...new Set(permissions)],
+  });
 
   sendResponse(res, 201, 'Role added successfully', newRole);
 });
 
 // Allows authorized users to update an existing role
-export const editRole = handleAsync(async (req, res) => {
+export const updateRole = handleAsync(async (req, res) => {
   const { roleId } = req.params;
   const { title, permissions } = req.body;
 
@@ -63,6 +72,13 @@ export const editRole = handleAsync(async (req, res) => {
 
   if (!role) {
     throw new CustomError('Role not found', 404);
+  }
+
+  if (hasAllPermissions(role.permissions) && !hasAllPermissions(permissions)) {
+    throw new CustomError(
+      'Cannot modify permissions for a role with full administrative access. Only title updates are allowed',
+      403
+    );
   }
 
   const roleByTitle = await Role.findOne({ title, _id: { $ne: roleId } });
@@ -74,19 +90,57 @@ export const editRole = handleAsync(async (req, res) => {
     );
   }
 
-  const roleByPermissions = await Role.findOne({ permissions: { $eq: permissions } });
+  const roleByPermissions = await Role.findOne({
+    permissions: {
+      $all: permissions,
+      $size: permissions.length,
+    },
+    _id: { $ne: roleId },
+  });
 
   if (roleByPermissions) {
     throw new CustomError(
-      `${roleByPermissions.title} role by these same permissions already exists. Either use it or provide different permissions`,
+      `${roleByPermissions.title} role with the same permissions already exists. Either use it or provide different permissions`,
       409
     );
   }
 
-  const updatedRole = await Role.findByIdAndUpdate(roleId, req.body, {
-    runValidators: true,
-    new: true,
-  });
+  const updatedRole = await Role.findByIdAndUpdate(
+    roleId,
+    {
+      title,
+      $addToSet: {
+        permissions: { $each: permissions },
+      },
+    },
+    {
+      runValidators: true,
+      new: true,
+    }
+  );
 
   sendResponse(res, 200, 'Role updated successfully', updatedRole);
+});
+
+// Allows authorized users to delete a role
+export const deleteRole = handleAsync(async (req, res) => {
+  const { roleId } = req.params;
+
+  const role = await Role.findById(roleId);
+
+  if (!role) {
+    throw new CustomError('Role not found', 404);
+  }
+
+  if (hasAllPermissions(role.permissions)) {
+    throw new CustomError(
+      'Cannot delete a role with full administrative access. This role is required for system administration',
+      403
+    );
+  }
+
+  await Role.findByIdAndDelete(roleId);
+  await User.updateMany({ role: roleId }, { $unset: { role: 1 } });
+
+  sendResponse(res, 200, 'Role deleted succesfully', roleId);
 });
