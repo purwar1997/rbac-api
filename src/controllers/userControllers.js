@@ -136,7 +136,8 @@ export const getUsers = handleAsync(async (req, res) => {
     _id: { $ne: req.user._id },
   })
     .select({
-      fullname: 1,
+      firstname: 1,
+      lastname: 1,
       email: 1,
       phone: 1,
       role: 1,
@@ -177,7 +178,11 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
     throw new CustomError('Provided role does not exist', 404);
   }
 
-  if (isOnlyRootUser(user) && user.role._id.toString() !== roleId) {
+  if (user.role?._id.toString() === roleId) {
+    throw new CustomError('Provided role has already been assigned to the user', 409);
+  }
+
+  if (isOnlyRootUser(user)) {
     throw new CustomError(
       `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before assigning new role to this user`,
       409
@@ -196,6 +201,7 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
     await Role.findByIdAndUpdate(user.role._id, { $inc: { userCount: -1 } });
   }
 
+  updatedUser.role.userCount = updatedUser.role.userCount + 1;
   sendResponse(res, 200, 'Role assigned to user successfully', updatedUser);
 });
 
@@ -210,7 +216,7 @@ export const unassignRoleFromUser = handleAsync(async (req, res) => {
   }
 
   if (!user.role) {
-    throw new CustomError('User does not have any role', 409);
+    throw new CustomError('User has not been assigned a role', 409);
   }
 
   if (isOnlyRootUser(user)) {
@@ -220,8 +226,13 @@ export const unassignRoleFromUser = handleAsync(async (req, res) => {
     );
   }
 
-  user.role = undefined;
-  const updatedUser = await user.save();
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      $unset: { role: 1 },
+    },
+    { new: true }
+  );
 
   await Role.findByIdAndUpdate(user.role._id, { $inc: { userCount: -1 } });
 

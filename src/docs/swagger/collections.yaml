@@ -349,6 +349,10 @@ paths:
                       properties:
                         id:
                           type: string
+                        firstname:
+                          type: string
+                        lastname:
+                          type: string
                         fullname:
                           type: string
                         email:
