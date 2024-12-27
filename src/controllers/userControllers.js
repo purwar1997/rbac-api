@@ -243,15 +243,18 @@ export const unassignRoleFromUser = handleAsync(async (req, res) => {
 export const activateUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
-  const activeUser = await User.findByIdAndUpdate(
-    userId,
-    { isActive: true },
-    { runValidators: true, new: true }
-  );
+  const user = await User.findById(userId);
 
-  if (!activeUser) {
+  if (!user) {
     throw new CustomError('User not found', 404);
   }
+
+  if (user.isActive) {
+    throw new CustomError('User is already active', 409);
+  }
+
+  user.isActive = true;
+  const activeUser = await user.save();
 
   sendResponse(res, 200, 'User activated successfully', activeUser);
 });
@@ -266,6 +269,10 @@ export const deactivateUser = handleAsync(async (req, res) => {
     throw new CustomError('User not found', 404);
   }
 
+  if (!user.isActive) {
+    throw new CustomError('User is already inactive', 409);
+  }
+
   if (isOnlyRootUser(user)) {
     throw new CustomError(
       `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before deactivating this user`,
@@ -273,11 +280,9 @@ export const deactivateUser = handleAsync(async (req, res) => {
     );
   }
 
-  const inactiveUser = await User.findByIdAndUpdate(
-    userId,
-    { isActive: false },
-    { runValidators: true, new: true }
-  );
+  user.isActive = false;
+  user.role = user.role?._id;
+  const inactiveUser = await user.save();
 
   sendResponse(res, 200, 'User deactivated successfully', inactiveUser);
 });
@@ -292,6 +297,10 @@ export const archiveUser = handleAsync(async (req, res) => {
     throw new CustomError('User not found', 404);
   }
 
+  if (user.isArchived) {
+    throw new CustomError('User has already been archived', 409);
+  }
+
   if (isOnlyRootUser(user)) {
     throw new CustomError(
       `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before archiving this user`,
@@ -299,11 +308,9 @@ export const archiveUser = handleAsync(async (req, res) => {
     );
   }
 
-  const archivedUser = await User.findByIdAndUpdate(
-    userId,
-    { isArchived: true },
-    { runValidators: true, new: true }
-  );
+  user.isArchived = true;
+  user.role = user.role?._id;
+  const archivedUser = await user.save();
 
   sendResponse(res, 200, 'User archived successfully', archivedUser);
 });
@@ -312,15 +319,18 @@ export const archiveUser = handleAsync(async (req, res) => {
 export const restoreArchivedUser = handleAsync(async (req, res) => {
   const { userId } = req.params;
 
-  const restoredUser = await User.findByIdAndUpdate(
-    userId,
-    { isArchived: false },
-    { runValidators: true, new: true }
-  );
+  const user = await User.findById(userId);
 
-  if (!restoredUser) {
+  if (!user) {
     throw new CustomError('User not found', 404);
   }
+
+  if (!user.isArchived) {
+    throw new CustomError('User is not archived, so it cannot be restored', 409);
+  }
+
+  user.isArchived = false;
+  const restoredUser = await user.save();
 
   sendResponse(res, 200, 'Archived user restored successfully', restoredUser);
 });
