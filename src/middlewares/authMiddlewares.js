@@ -33,21 +33,21 @@ export const isAuthorized = requiredPermission =>
 
     if (!user.role) {
       throw new CustomError(
-        "User hasn't been assigned a role and therefore he doesn't have any permissions",
+        'You have not been assigned a role, so you do not have permissions to perform any task',
         403
       );
     }
 
     if (!user.isActive) {
       throw new CustomError(
-        'User is currently inactive. Therefore, he is not allowed to use any of his permissions',
+        'You are currently inactive, so you are not allowed to perform any task',
         403
       );
     }
 
     if (!user.role.permissions.includes(requiredPermission)) {
       throw new CustomError(
-        `User has been assigned a role of ${user.role.title.toLowerCase()}. Therefore, he doesn't have neccessary permissions to ${PERMISSIONS_DESCRIPTION[
+        `You have been assigned a role of ${user.role.title.toLowerCase()}, so you do not have neccessary permissions to ${PERMISSIONS_DESCRIPTION[
           requiredPermission
         ].toLowerCase()}`,
         403

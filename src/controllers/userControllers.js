@@ -29,7 +29,7 @@ export const updateUserProfile = handleAsync(async (req, res) => {
 
   if (userByPhone) {
     throw new CustomError(
-      'This phone number is being used by another user. Please set a different phone number',
+      'This phone number is being used by another user. Please provide a different phone number',
       409
     );
   }
@@ -49,7 +49,7 @@ export const deleteAccount = handleAsync(async (req, res) => {
   if (isOnlyRootUser(user)) {
     throw new CustomError(
       `Currently, you are the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before deleting you account`,
-      403
+      409
     );
   }
 
@@ -174,7 +174,7 @@ export const assignRoleToUser = handleAsync(async (req, res) => {
   if (isOnlyRootUser(user) && user.role._id.toString() !== roleId) {
     throw new CustomError(
       `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before assigning new role to this user`,
-      403
+      409
     );
   }
 
@@ -204,13 +204,13 @@ export const unassignRoleFromUser = handleAsync(async (req, res) => {
   }
 
   if (!user.role) {
-    throw new CustomError("User hasn't been assigned a role", 409);
+    throw new CustomError('User does not have any role', 409);
   }
 
   if (isOnlyRootUser(user)) {
     throw new CustomError(
       `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before unassigning role from this user`,
-      403
+      409
     );
   }
 
@@ -252,7 +252,7 @@ export const deactivateUser = handleAsync(async (req, res) => {
   if (isOnlyRootUser(user)) {
     throw new CustomError(
       `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before deactivating this user`,
-      403
+      409
     );
   }
 
@@ -278,7 +278,7 @@ export const archiveUser = handleAsync(async (req, res) => {
   if (isOnlyRootUser(user)) {
     throw new CustomError(
       `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before archiving this user`,
-      403
+      409
     );
   }
 
@@ -321,7 +321,7 @@ export const deleteUser = handleAsync(async (req, res) => {
   if (isOnlyRootUser(user)) {
     throw new CustomError(
       `Currently, this user is the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before deleting this user`,
-      403
+      409
     );
   }
 
