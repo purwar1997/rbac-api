@@ -597,7 +597,7 @@ paths:
     get:
       tags:
         - Roles
-      description: Allows authenticated users to retrieve a list of all roles
+      description: Allows authenticated users to retrieve all roles
       operationId: getAllRoles
       responses:
         '200':
@@ -664,7 +664,7 @@ paths:
         - in: path
           name: roleId
           description: ID of the role to be retrieved
-          operationId: getRoleById
+          required: true
           schema:
             type: string
       responses:
@@ -686,7 +686,7 @@ paths:
       tags:
         - Roles
       description: Allows authorized users to update an existing role
-      operationId: editRole
+      operationId: updateRole
       parameters:
         - in: path
           name: roleId
@@ -715,6 +715,33 @@ paths:
                     type: string
                   data:
                     $ref: '#/components/schemas/Role'
+
+    delete:
+      tags:
+        - Roles
+      description: Allows authorized users to delete a role
+      operationId: deleteRole
+      parameters:
+        - in: path
+          name: roleId
+          description: ID of the role to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing ID of the deleted role
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: string
 
 components:
   schemas:
@@ -846,7 +873,7 @@ components:
           - delete_user
           - view_role
           - add_role
-          - edit_role
+          - update_role
           - delete_role
           - assign_role
           - unassign_role
