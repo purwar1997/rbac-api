@@ -19,7 +19,7 @@ const passwordSchema = Joi.string().pattern(REGEX.PASSWORD).required().messages(
   'string.base': 'Password must be a string',
   'string.empty': 'Password cannot be empty',
   'string.pattern.base':
-    'Password must be 6-20 characters long and should contain at least one digit, one letter and one special character',
+    'Password must be 6-20 characters long and should contain at least one digit, one letter, and one special character',
 });
 
 const confirmPasswordSchema = Joi.any().valid(Joi.ref('password')).required().strip().messages({

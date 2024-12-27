@@ -44,9 +44,14 @@ export const formatCastError = error => {
 
 export const atLeastOnePermission = permissions => permissions.length > 0;
 
-export const checkValidPermissions = permissions => {
-  const validPermissions = Object.values(flattenObject(PERMISSIONS));
-  return permissions.every(permission => validPermissions.includes(permission));
+export const checkValidPermissions = userPermissions => {
+  const allowedPermissions = Object.values(flattenObject(PERMISSIONS));
+
+  if (userPermissions.every(permission => allowedPermissions.includes(permission))) {
+    return true;
+  }
+
+  return false;
 };
 
 export const stripObjectKeys =
@@ -120,8 +125,18 @@ export const capitalizeFirstLetter = str => {
 
 export const singularize = str => pluralize.singular(str);
 
-export const hasAllPermissions = permissions =>
-  Object.values(flattenObject(PERMISSIONS)).every(permission => permissions.includes(permission));
+export const hasAllPermissions = userPermissions => {
+  const allPermissions = Object.values(flattenObject(PERMISSIONS));
+
+  if (
+    userPermissions.length === allPermissions.length &&
+    allPermissions.every(permission => userPermissions.includes(permission))
+  ) {
+    return true;
+  }
+
+  return false;
+};
 
 export const isOnlyRootUser = user => {
   let isRootUser = false;

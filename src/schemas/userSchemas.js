@@ -29,7 +29,7 @@ export const updateProfileSchema = customJoi
     password: Joi.string().pattern(REGEX.PASSWORD).allow('').messages({
       'string.base': 'Password must be a string',
       'string.pattern.base':
-        'Password must be 6-20 characters long and should contain at least one digit, one letter and one special character',
+        'Password must be 6-20 characters long and should contain at least one digit, one letter, and one special character',
     }),
 
     confirmPassword: Joi.any().valid(Joi.ref('password')).messages({
