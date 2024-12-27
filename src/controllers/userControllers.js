@@ -29,7 +29,7 @@ export const updateUserProfile = handleAsync(async (req, res) => {
 
   if (userByPhone) {
     throw new CustomError(
-      'This phone number is being used by another user. Please provide a different phone number',
+      'This phone number is linked to another user. Please provide a different phone number',
       409
     );
   }
@@ -48,12 +48,16 @@ export const deleteAccount = handleAsync(async (req, res) => {
 
   if (isOnlyRootUser(user)) {
     throw new CustomError(
-      `Currently, you are the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before deleting you account`,
+      `Currently, you are the only ${user.role.title.toLowerCase()}. Promote another user to the role of ${user.role.title.toLowerCase()} before deleting your account`,
       409
     );
   }
 
   await User.findByIdAndDelete(user._id);
+
+  if (user.avatar?.publicId) {
+    await deleteImage(user.avatar.publicId);
+  }
 
   if (user.role) {
     await Role.findByIdAndUpdate(user.role._id, { $inc: { userCount: -1 } });
@@ -328,6 +332,10 @@ export const deleteUser = handleAsync(async (req, res) => {
   }
 
   await User.findByIdAndDelete(userId);
+
+  if (user.avatar?.publicId) {
+    await deleteImage(user.avatar.publicId);
+  }
 
   if (user.role) {
     await Role.findByIdAndUpdate(user.role._id, { $inc: { userCount: -1 } });
