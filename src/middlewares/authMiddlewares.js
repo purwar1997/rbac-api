@@ -20,7 +20,7 @@ export const isAuthenticated = handleAsync(async (req, _res, next) => {
   const user = await User.findById(decodedToken.userId).populate('role');
 
   if (!user) {
-    throw new CustomError('Access denied. User not found', 401);
+    throw new CustomError('Access denied. User not found', 404);
   }
 
   req.user = user;
@@ -47,7 +47,7 @@ export const isAuthorized = requiredPermission =>
 
     if (!user.role.permissions.includes(requiredPermission)) {
       throw new CustomError(
-        `You have been assigned a role of ${user.role.title.toLowerCase()}, so you do not have neccessary permissions to ${PERMISSIONS_DESCRIPTION[
+        `You have been assigned a role of ${user.role.title.toLowerCase()}, so you do not have necessary permissions to ${PERMISSIONS_DESCRIPTION[
           requiredPermission
         ].toLowerCase()}`,
         403

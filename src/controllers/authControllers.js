@@ -1,6 +1,8 @@
+import crypto from 'crypto';
 import User from '../models/user.js';
 import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
+import sendEmail from '../services/sendEmail.js';
 import { setCookieOptions, clearCookieOptions } from '../utils/cookieOptions.js';
 import { sendResponse } from '../utils/helperFunctions.js';
 
@@ -72,7 +74,7 @@ export const forgotPassword = handleAsync(async (req, res) => {
   const resetPasswordToken = user.generateForgotPasswordToken();
   await user.save();
 
-  const resetPasswordUrl = `${req.protocol}://${req.host}/reset-password/${resetPasswordToken}`;
+  const resetPasswordUrl = `${req.protocol}://${req.hostname}/reset-password/${resetPasswordToken}`;
 
   try {
     const options = {

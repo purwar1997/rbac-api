@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import config from '../config/env.config.js';
 import { JWT, REGEX } from '../constants/index.js';
 
