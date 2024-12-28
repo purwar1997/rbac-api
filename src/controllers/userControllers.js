@@ -73,7 +73,7 @@ export const addProfilePhoto = handleAsync(async (req, res) => {
   const { user } = req;
 
   if (user.avatar?.publicId) {
-    throw new CustomError('Profile photo already exists', 409);
+    await deleteImage(user.avatar.publicId);
   }
 
   const response = await uploadImage(FILE_UPLOAD.FOLDER_NAME, req.file, user._id);
