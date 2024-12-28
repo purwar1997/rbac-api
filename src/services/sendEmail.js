@@ -8,7 +8,7 @@ const sendEmail = async options => {
       from: config.email.senderAddress,
       to: options.recipient,
       subject: options.subject,
-      text: options.text,
+      html: options.html,
     });
 
     return info.messageId;

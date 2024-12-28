@@ -5,6 +5,7 @@ import CustomError from '../utils/CustomError.js';
 import sendEmail from '../services/sendEmail.js';
 import { setCookieOptions, clearCookieOptions } from '../utils/cookieOptions.js';
 import { sendResponse } from '../utils/helperFunctions.js';
+import { getPasswordResetEmail } from '../utils/emailTemplates.js';
 
 // Allows users to create an account
 export const signup = handleAsync(async (req, res) => {
@@ -80,7 +81,7 @@ export const forgotPassword = handleAsync(async (req, res) => {
     const options = {
       recipient: email,
       subject: 'Reset your password',
-      text: `To reset your password, copy-paste the following link in browser and hit enter: ${resetPasswordUrl}.`,
+      html: getPasswordResetEmail(resetPasswordUrl),
     };
 
     await sendEmail(options);
