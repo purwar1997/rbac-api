@@ -22,7 +22,7 @@ This project is built using Express.js and MongoDB; all the APIs are well-docume
 
 ## 2. Roles and Permissions
 
-I have hardcoded a total of 12 permissions that are shared differently between 3 roles - Viewer, Moderator and Admin. Users are allowed to perform certain tasks based on the role they are assigned. Users who haven't been assigned a role don't have any permissions and therefore can't perform any task.
+I have hardcoded a total of 14 permissions that are shared differently between 3 roles - Viewer, Moderator and Admin. Users are allowed to perform certain tasks based on the role they are assigned. Users who haven't been assigned a role don't have any permissions, so they can't perform any task.
 
 This table encapsulates the relationship between different permissions and roles.
 
@@ -38,7 +38,7 @@ This table encapsulates the relationship between different permissions and roles
 | Delete user             |   No   |    Yes    |  Yes  |
 | View role               |  Yes   |    Yes    |  Yes  |
 | Add new role            |   No   |    No     |  Yes  |
-| Edit role               |   No   |    No     |  Yes  |
+| Update role             |   No   |    No     |  Yes  |
 | Delete role             |   No   |    No     |  Yes  |
 | Activate role           |   No   |    No     |  Yes  |
 | Deactivate role         |   No   |    No     |  Yes  |
@@ -71,7 +71,7 @@ APIs are documented using Swagger (OpenAPI) specification and all of them are li
 
 ## 5. Schemas and Routes
 
-This project consists of 2 schemas and 20+ routes and controllers.
+This project consists of 2 schemas and 25+ routes and controllers.
 
 ### Authentication Routes
 
