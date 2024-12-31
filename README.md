@@ -40,6 +40,8 @@ This table encapsulates the relationship between different permissions and roles
 | Add new role            |   No   |    No     |  Yes  |
 | Edit role               |   No   |    No     |  Yes  |
 | Delete role             |   No   |    No     |  Yes  |
+| Activate role           |   No   |    No     |  Yes  |
+| Deactivate role         |   No   |    No     |  Yes  |
 
 ## 3. Deployment and Documentation
 
@@ -103,10 +105,12 @@ This project consists of 2 schemas and 20+ routes and controllers.
 
 ### Role Routes
 
-| Action              | Method | Route          | Access Requirements            |
-| :------------------ | :----- | :------------- | :----------------------------- |
-| Retrieve all roles  | GET    | /roles         | Authentication                 |
-| Add new role        | POST   | /roles         | Authentication + Authorization |
-| Retrieve role by ID | GET    | /roles/:roleId | Authentication + Authorization |
-| Update role         | PUT    | /roles/:roleId | Authentication + Authorization |
-| Delete role         | DELETE | /roles/:roleId | Authentication + Authorization |
+| Action              | Method | Route                     | Access Requirements            |
+| :------------------ | :----- | :------------------------ | :----------------------------- |
+| Retrieve all roles  | GET    | /roles                    | Authentication                 |
+| Add new role        | POST   | /roles                    | Authentication + Authorization |
+| Retrieve role by ID | GET    | /roles/:roleId            | Authentication + Authorization |
+| Update role         | PUT    | /roles/:roleId            | Authentication + Authorization |
+| Delete role         | DELETE | /roles/:roleId            | Authentication + Authorization |
+| Activate role       | PUT    | /roles/:roleId/activate   | Authentication + Authorization |
+| Deactivate role     | PUT    | /roles/:roleId/deactivate | Authentication + Authorization |

@@ -144,3 +144,50 @@ export const deleteRole = handleAsync(async (req, res) => {
 
   sendResponse(res, 200, 'Role deleted succesfully', roleId);
 });
+
+// Allows authorized users to activate an inactive role
+export const activateRole = handleAsync(async (req, res) => {
+  const { roleId } = req.params;
+
+  const role = await Role.findById(roleId);
+
+  if (!role) {
+    throw new CustomError('Role not found', 404);
+  }
+
+  if (role.isActive) {
+    throw new CustomError('Role is already active', 409);
+  }
+
+  role.isActive = true;
+  const activeRole = await role.save();
+
+  sendResponse(res, 200, 'Role activated successfully', activeRole);
+});
+
+// Allows authorized users to deactivate an active role
+export const deactivateRole = handleAsync(async (req, res) => {
+  const { roleId } = req.params;
+
+  const role = await Role.findById(roleId);
+
+  if (!role) {
+    throw new CustomError('Role not found', 404);
+  }
+
+  if (!role.isActive) {
+    throw new CustomError('Role is already inactive', 409);
+  }
+
+  if (hasAllPermissions(role.permissions)) {
+    throw new CustomError(
+      'Cannot deactivate a role with full administrative access. This role is required for system administration',
+      403
+    );
+  }
+
+  role.isActive = false;
+  const inactiveRole = await role.save();
+
+  sendResponse(res, 200, 'Role deactivated successfully', inactiveRole);
+});

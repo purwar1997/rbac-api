@@ -747,6 +747,62 @@ paths:
                   data:
                     type: string
 
+  /roles/{roleId}/activate:
+    put:
+      tags:
+        - Roles
+      description: Allows authorized users to activate an inactive role
+      operationId: activateRole
+      parameters:
+        - in: path
+          name: roleId
+          description: ID of the role to be activated
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing an active role
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Role'
+
+  /roles/{roleId}/deactivate:
+    put:
+      tags:
+        - Roles
+      description: Allows authorized users to deactivate an active role
+      operationId: deactivateRole
+      parameters:
+        - in: path
+          name: roleId
+          description: ID of the role to be deactivated
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object containing an inactive role
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Role'
+
 components:
   schemas:
     Success:

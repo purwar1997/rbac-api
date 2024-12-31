@@ -33,6 +33,8 @@ export const PERMISSIONS = deepFreeze({
     DELETE: 'delete_role',
     ASSIGN: 'assign_role',
     UNASSIGN: 'unassign_role',
+    ACTIVATE: 'activate_role',
+    DEACTIVATE: 'deactivate_role',
   },
 });
 
@@ -49,6 +51,8 @@ export const PERMISSIONS_DESCRIPTION = Object.freeze({
   [PERMISSIONS.ROLE.DELETE]: 'Delete a role',
   [PERMISSIONS.ROLE.ASSIGN]: 'Assign role to the user',
   [PERMISSIONS.ROLE.UNASSIGN]: 'Unassign role from the user',
+  [PERMISSIONS.ROLE.ACTIVATE]: 'Activate a role',
+  [PERMISSIONS.ROLE.DEACTIVATE]: 'Deactivate a role',
 });
 
 export const FILE_UPLOAD = Object.freeze({

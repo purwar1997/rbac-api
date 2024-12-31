@@ -42,6 +42,10 @@ const roleSchema = new Schema(
         message: 'User count must be an integer',
       },
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

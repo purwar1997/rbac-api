@@ -38,6 +38,13 @@ export const isAuthorized = requiredPermission =>
       );
     }
 
+    if (!user.role.isActive) {
+      throw new CustomError(
+        'The role you have been assigned is currently inactive, so you are not allowed to perform any task',
+        403
+      );
+    }
+
     if (!user.isActive) {
       throw new CustomError(
         'You are currently inactive, so you are not allowed to perform any task',

@@ -5,6 +5,8 @@ import {
   addNewRole,
   updateRole,
   deleteRole,
+  activateRole,
+  deactivateRole,
 } from '../controllers/roleControllers.js';
 import { isAuthenticated, isAuthorized } from '../middlewares/authMiddlewares.js';
 import { validatePathParams, validatePayload } from '../middlewares/requestValidators.js';
@@ -30,5 +32,23 @@ router
     updateRole
   )
   .delete(isAuthorized(PERMISSIONS.ROLE.DELETE), validatePathParams(roleIdSchema), deleteRole);
+
+router
+  .route('/:roleId/activate')
+  .put(
+    isAuthenticated,
+    isAuthorized(PERMISSIONS.ROLE.ACTIVATE),
+    validatePathParams(roleIdSchema),
+    activateRole
+  );
+
+router
+  .route('/:roleId/deactivate')
+  .put(
+    isAuthenticated,
+    isAuthorized(PERMISSIONS.ROLE.DEACTIVATE),
+    validatePathParams(roleIdSchema),
+    deactivateRole
+  );
 
 export default router;
