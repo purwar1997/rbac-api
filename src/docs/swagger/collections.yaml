@@ -905,6 +905,8 @@ components:
         userCount:
           type: integer
           format: int32
+        isActive:
+          type: boolean
         createdAt:
           type: string
           format: date-time
