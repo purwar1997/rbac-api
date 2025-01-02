@@ -1,8 +1,9 @@
 import Joi from 'joi';
 import customJoi from '../utils/customJoi.js';
 import { validateObjectId, formatOptions, checkPermissions } from '../utils/helperFunctions.js';
-import { limitSchema, pageSchema } from './commonSchemas.js';
+import { limitSchema, orderSchema, pageSchema } from './commonSchemas.js';
 import { REGEX, PERMISSIONS } from '../constants/common.js';
+import { ROLE_SORT_OPTIONS } from '../constants/sortOptions.js';
 
 export const roleBodySchema = customJoi.object({
   title: Joi.string().trim().pattern(REGEX.NAME).max(50).required().messages({
@@ -38,6 +39,17 @@ export const roleIdSchema = Joi.object({
 });
 
 export const rolesQuerySchema = Joi.object({
+  sortBy: Joi.string()
+    .trim()
+    .lowercase()
+    .valid(...Object.values(ROLE_SORT_OPTIONS))
+    .allow('')
+    .messages({
+      'string.base': 'Sort option must be a string',
+      'any.only': `Invalid sort value. Valid options are: ${formatOptions(ROLE_SORT_OPTIONS)}`,
+    }),
+
+  order: orderSchema,
   page: pageSchema,
   limit: limitSchema,
 });

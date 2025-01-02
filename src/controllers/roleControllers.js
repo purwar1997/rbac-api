@@ -3,10 +3,12 @@ import User from '../models/user.js';
 import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
 import { hasAllPermissions, sendResponse } from '../utils/helperFunctions.js';
+import { getRoleSortRule } from '../utils/sortRules.js';
 
 // Allows authenticated users to retrieve a paginated list of roles
 export const getRoles = handleAsync(async (req, res) => {
-  const { page, limit } = req.query;
+  const { sortBy, order, page, limit } = req.query;
+  const sortRule = sortBy ? getRoleSortRule(sortBy, order) : { createdAt: -1 };
 
   const roles = await Role.find()
     .select({
@@ -15,10 +17,11 @@ export const getRoles = handleAsync(async (req, res) => {
       isActive: 1,
       createdAt: 1,
     })
+    .sort(sortRule)
     .skip((page - 1) * limit)
     .limit(limit);
 
-  const roleCount = await Role.find();
+  const roleCount = await Role.countDocuments();
 
   res.set('X-Total-Count', roleCount);
 

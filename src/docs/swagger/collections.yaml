@@ -331,6 +331,15 @@ paths:
       description: Allows authenticated users to retrieve a paginated list of other users
       operationId: getUsers
       parameters:
+        - in: query
+          name: sortBy
+          description: Option to sort results by
+          schema:
+            type: string
+            enum:
+              - name
+              - created_at
+        - $ref: '#/components/parameters/orderParam'
         - $ref: '#/components/parameters/pageParam'
         - $ref: '#/components/parameters/limitParam'
       responses:
@@ -360,12 +369,13 @@ paths:
                           type: string
                         email:
                           type: string
-                        phone:
-                          type: string
                         isActive:
                           type: boolean
                         role:
                           $ref: '#/components/schemas/Role'
+                        createdAt:
+                          type: string
+                          format: date-time
           headers:
             X-Total-Count:
               description: Total number of users
@@ -613,6 +623,15 @@ paths:
       description: Allows authenticated users to retrieve a paginated list of roles
       operationId: getRoles
       parameters:
+        - in: query
+          name: sortBy
+          description: Option to sort results by
+          schema:
+            type: string
+            enum:
+              - user_count
+              - created_at
+        - $ref: '#/components/parameters/orderParam'
         - $ref: '#/components/parameters/pageParam'
         - $ref: '#/components/parameters/limitParam'
       responses:
@@ -963,6 +982,16 @@ components:
           - deactivate_role
 
   parameters:
+    orderParam:
+      in: query
+      name: order
+      description: Sort results by ascending or descending order
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+
     pageParam:
       in: query
       name: page

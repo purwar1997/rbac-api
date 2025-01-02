@@ -1,8 +1,9 @@
 import Joi from 'joi';
 import customJoi from '../utils/customJoi.js';
-import { stripObjectKeys, validateObjectId } from '../utils/helperFunctions.js';
-import { limitSchema, pageSchema } from './commonSchemas.js';
+import { formatOptions, stripObjectKeys, validateObjectId } from '../utils/helperFunctions.js';
+import { limitSchema, orderSchema, pageSchema } from './commonSchemas.js';
 import { REGEX } from '../constants/common.js';
+import { USER_SORT_OPTIONS } from '../constants/sortOptions.js';
 
 export const updateProfileSchema = customJoi
   .object({
@@ -61,6 +62,17 @@ export const userIdSchema = Joi.object({
 });
 
 export const usersQuerySchema = Joi.object({
+  sortBy: Joi.string()
+    .trim()
+    .lowercase()
+    .valid(...Object.values(USER_SORT_OPTIONS))
+    .allow('')
+    .messages({
+      'string.base': 'Sort option must be a string',
+      'any.only': `Invalid sort value. Valid options are: ${formatOptions(USER_SORT_OPTIONS)}`,
+    }),
+
+  order: orderSchema,
   page: pageSchema,
   limit: limitSchema,
 });

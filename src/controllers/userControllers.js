@@ -5,6 +5,7 @@ import CustomError from '../utils/CustomError.js';
 import { sendResponse, isOnlyRootUser } from '../utils/helperFunctions.js';
 import { clearCookieOptions } from '../utils/cookieOptions.js';
 import { uploadImage, deleteImage } from '../services/cloudinaryAPIs.js';
+import { getUserSortRule } from '../utils/sortRules.js';
 import { FILE_UPLOAD } from '../constants/common.js';
 
 // Allows authenticated users to retrieve their profile
@@ -131,7 +132,8 @@ export const removeProfilePhoto = handleAsync(async (req, res) => {
 
 // Allows authenticated users to retrieve a paginated list of other users
 export const getUsers = handleAsync(async (req, res) => {
-  const { page, limit } = req.query;
+  const { sortBy, order, page, limit } = req.query;
+  const sortRule = getUserSortRule(sortBy, order);
 
   const users = await User.find({
     _id: { $ne: req.user._id },
@@ -141,10 +143,11 @@ export const getUsers = handleAsync(async (req, res) => {
       firstname: 1,
       lastname: 1,
       email: 1,
-      phone: 1,
       role: 1,
       isActive: 1,
+      createdAt: 1,
     })
+    .sort(sortRule)
     .skip((page - 1) * limit)
     .limit(limit)
     .populate('role');

@@ -64,6 +64,7 @@ export const FILE_UPLOAD = Object.freeze({
 
 export const PAGE = Object.freeze({
   MIN: 1,
+  MAX: 1000,
   DEFAULT: 1,
 });
 
