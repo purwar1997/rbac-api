@@ -970,7 +970,7 @@ components:
       schema:
         type: integer
         format: int32
-        min: 1
+        minimum: 1
 
     limitParam:
       in: query
@@ -979,5 +979,5 @@ components:
       schema:
         type: integer
         format: int32
-        min: 1
-        max: 100
+        minimum: 1
+        maximum: 100
