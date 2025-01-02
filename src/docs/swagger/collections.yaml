@@ -939,3 +939,5 @@ components:
           - delete_role
           - assign_role
           - unassign_role
+          - activate_role
+          - deactivate_role
