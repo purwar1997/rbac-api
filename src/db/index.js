@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import config from '../config/env.config.js';
-import { STORAGE } from '../constants/index.js';
+import { STORAGE } from '../constants/common.js';
 
 mongoose.set('toJSON', {
   virtuals: true,

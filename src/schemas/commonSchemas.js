@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { PAGE, LIMIT } from '../constants/index.js';
+import { PAGE, LIMIT } from '../constants/common.js';
 
 export const pageSchema = Joi.number()
   .integer()

@@ -3,7 +3,7 @@ import User from '../models/user.js';
 import CustomError from '../utils/CustomError.js';
 import handleAsync from '../utils/handleAsync.js';
 import config from '../config/env.config.js';
-import { PERMISSIONS_DESCRIPTION } from '../constants/index.js';
+import { PERMISSIONS_DESCRIPTION } from '../constants/common.js';
 
 export const isAuthenticated = handleAsync(async (req, _res, next) => {
   let token;

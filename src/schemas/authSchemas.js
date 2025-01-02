@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import customJoi from '../utils/customJoi.js';
-import { REGEX } from '../constants/index.js';
+import { REGEX } from '../constants/common.js';
 
 const emailSchema = Joi.string()
   .trim()

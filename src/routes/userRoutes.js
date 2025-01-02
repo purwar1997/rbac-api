@@ -30,7 +30,7 @@ import {
   restoreArchivedUser,
   deleteUser,
 } from '../controllers/userControllers.js';
-import { PERMISSIONS, FILE_UPLOAD } from '../constants/index.js';
+import { PERMISSIONS, FILE_UPLOAD } from '../constants/common.js';
 
 const router = express.Router();
 

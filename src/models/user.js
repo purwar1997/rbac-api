@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import config from '../config/env.config.js';
-import { JWT, REGEX } from '../constants/index.js';
+import { JWT, REGEX } from '../constants/common.js';
 
 const Schema = mongoose.Schema;
 

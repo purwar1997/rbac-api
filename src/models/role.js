@@ -4,7 +4,7 @@ import {
   checkValidPermissions,
   formatOptions,
 } from '../utils/helperFunctions.js';
-import { PERMISSIONS, REGEX } from '../constants/index.js';
+import { PERMISSIONS, REGEX } from '../constants/common.js';
 
 const Schema = mongoose.Schema;
 

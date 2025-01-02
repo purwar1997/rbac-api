@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import pluralize from 'pluralize';
-import { PERMISSIONS } from '../constants/index.js';
+import { PERMISSIONS } from '../constants/common.js';
 
 export const sendResponse = (res, statusCode, message, data) => {
   res.status(statusCode).json({

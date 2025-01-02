@@ -15,7 +15,7 @@ import {
   validatePayload,
 } from '../middlewares/requestValidators.js';
 import { roleIdSchema, roleBodySchema, rolesQuerySchema } from '../schemas/roleSchemas.js';
-import { PERMISSIONS } from '../constants/index.js';
+import { PERMISSIONS } from '../constants/common.js';
 
 const router = express.Router();
 

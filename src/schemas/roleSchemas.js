@@ -2,7 +2,7 @@ import Joi from 'joi';
 import customJoi from '../utils/customJoi.js';
 import { validateObjectId, formatOptions, checkPermissions } from '../utils/helperFunctions.js';
 import { limitSchema, pageSchema } from './commonSchemas.js';
-import { REGEX, PERMISSIONS } from '../constants/index.js';
+import { REGEX, PERMISSIONS } from '../constants/common.js';
 
 export const roleBodySchema = customJoi.object({
   title: Joi.string().trim().pattern(REGEX.NAME).max(50).required().messages({

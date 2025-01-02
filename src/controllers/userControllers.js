@@ -5,7 +5,7 @@ import CustomError from '../utils/CustomError.js';
 import { sendResponse, isOnlyRootUser } from '../utils/helperFunctions.js';
 import { clearCookieOptions } from '../utils/cookieOptions.js';
 import { uploadImage, deleteImage } from '../services/cloudinaryAPIs.js';
-import { FILE_UPLOAD } from '../constants/index.js';
+import { FILE_UPLOAD } from '../constants/common.js';
 
 // Allows authenticated users to retrieve their profile
 export const getProfile = handleAsync(async (req, res) => {

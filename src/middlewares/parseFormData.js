@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
 import { capitalizeFirstLetter, singularize, formatBytes } from '../utils/helperFunctions.js';
-import { FILE_UPLOAD } from '../constants/index.js';
+import { FILE_UPLOAD } from '../constants/common.js';
 
 const ensureUploadDirExists = dir => {
   if (!fs.existsSync(dir)) {

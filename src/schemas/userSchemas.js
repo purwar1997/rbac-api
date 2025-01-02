@@ -2,7 +2,7 @@ import Joi from 'joi';
 import customJoi from '../utils/customJoi.js';
 import { stripObjectKeys, validateObjectId } from '../utils/helperFunctions.js';
 import { limitSchema, pageSchema } from './commonSchemas.js';
-import { REGEX } from '../constants/index.js';
+import { REGEX } from '../constants/common.js';
 
 export const updateProfileSchema = customJoi
   .object({

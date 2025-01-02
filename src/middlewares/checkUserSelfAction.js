@@ -1,6 +1,6 @@
 import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
-import { PERMISSIONS } from '../constants/index.js';
+import { PERMISSIONS } from '../constants/common.js';
 
 const SELF_ACTION_ERROR_MESSAGES = Object.freeze({
   [PERMISSIONS.ROLE.ASSIGN]:
