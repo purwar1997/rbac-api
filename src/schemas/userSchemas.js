@@ -1,8 +1,13 @@
 import Joi from 'joi';
 import customJoi from '../utils/customJoi.js';
-import { formatOptions, stripObjectKeys, validateObjectId } from '../utils/helperFunctions.js';
+import {
+  formatOptions,
+  stripObjectKeys,
+  validateObjectId,
+  parseAmpersandSeparatedValues,
+} from '../utils/helperFunctions.js';
 import { limitSchema, orderSchema, pageSchema } from './commonSchemas.js';
-import { REGEX } from '../constants/common.js';
+import { REGEX, FILTER_OPTIONS } from '../constants/common.js';
 import { USER_SORT_OPTIONS } from '../constants/sortOptions.js';
 
 export const updateProfileSchema = customJoi
@@ -62,6 +67,26 @@ export const userIdSchema = Joi.object({
 });
 
 export const usersQuerySchema = Joi.object({
+  active: Joi.string()
+    .trim()
+    .lowercase()
+    .valid(...Object.values(FILTER_OPTIONS))
+    .allow('')
+    .messages({
+      'string.base': 'Active must be string',
+      'any.only': `Invalid value provided for active. Valid options are: ${formatOptions(
+        FILTER_OPTIONS
+      )}`,
+    }),
+
+  archived: Joi.boolean().truthy('yes', '1').falsy('no', '0').default(false).messages({
+    'boolean.base': 'Archived must be a boolean value',
+  }),
+
+  roles: Joi.string().custom(parseAmpersandSeparatedValues).empty('').default([]).messages({
+    'string.base': 'Roles must be a string',
+  }),
+
   sortBy: Joi.string()
     .trim()
     .lowercase()

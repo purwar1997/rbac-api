@@ -159,3 +159,22 @@ export const deepFreeze = obj => {
 
   return obj;
 };
+
+export const parseAmpersandSeparatedValues = (value, helpers) => {
+  if (typeof value !== 'string') {
+    return helpers.error('string.base');
+  }
+
+  const valuesArray = [
+    ...new Set(
+      value
+        .split(',')
+        .map(val => val.trim())
+        .filter(Boolean)
+    ),
+  ];
+
+  return valuesArray;
+};
+
+export const isBoolean = value => value === 'true' || value === 'false';

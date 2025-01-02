@@ -332,6 +332,30 @@ paths:
       operationId: getUsers
       parameters:
         - in: query
+          name: roles
+          description: Field to filter users by their role. Provide 'none' to retrieve users who have not been assigned a role
+          schema:
+            type: array
+            items:
+              type: string
+            uniqueItems: true
+          style: form
+          explode: false
+        - in: query
+          name: active
+          description: Field to filter users by their active status
+          schema:
+            type: string
+            enum:
+              - true
+              - false
+              - all
+        - in: query
+          name: archived
+          description: Field to filter archived users
+          schema:
+            type: boolean
+        - in: query
           name: sortBy
           description: Option to sort results by
           schema:

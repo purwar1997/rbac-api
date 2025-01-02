@@ -2,7 +2,7 @@ import User from '../models/user.js';
 import Role from '../models/role.js';
 import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
-import { sendResponse, isOnlyRootUser } from '../utils/helperFunctions.js';
+import { sendResponse, isOnlyRootUser, isBoolean } from '../utils/helperFunctions.js';
 import { clearCookieOptions } from '../utils/cookieOptions.js';
 import { uploadImage, deleteImage } from '../services/cloudinaryAPIs.js';
 import { getUserSortRule } from '../utils/sortRules.js';
@@ -132,13 +132,37 @@ export const removeProfilePhoto = handleAsync(async (req, res) => {
 
 // Allows authenticated users to retrieve a paginated list of other users
 export const getUsers = handleAsync(async (req, res) => {
-  const { sortBy, order, page, limit } = req.query;
+  let { roles, active, archived, sortBy, order, page, limit } = req.query;
+
+  let filters = {
+    _id: { $ne: req.user._id },
+    isArchived: archived,
+  };
+
+  if (roles.length) {
+    const rolesFilter = [];
+
+    if (roles.includes('none')) {
+      rolesFilter.push({ role: { $exists: false } });
+      roles = roles.filter(role => role !== 'none');
+    }
+
+    if (roles.length) {
+      const roleDocuments = await Role.find({ title: { $in: roles } });
+      const roleIds = roleDocuments.map(role => role._id);
+      rolesFilter.push({ role: { $in: roleIds } });
+    }
+
+    filters = { ...filters, $or: rolesFilter };
+  }
+
+  if (active && isBoolean(active)) {
+    filters.isActive = active;
+  }
+
   const sortRule = getUserSortRule(sortBy, order);
 
-  const users = await User.find({
-    _id: { $ne: req.user._id },
-    isArchived: false,
-  })
+  const users = await User.find(filters)
     .select({
       firstname: 1,
       lastname: 1,
@@ -147,16 +171,12 @@ export const getUsers = handleAsync(async (req, res) => {
       isActive: 1,
       createdAt: 1,
     })
+    .populate('role')
     .sort(sortRule)
     .skip((page - 1) * limit)
-    .limit(limit)
-    .populate('role');
+    .limit(limit);
 
-  const userCount = await User.countDocuments({
-    _id: { $ne: req.user._id },
-    isArchived: false,
-  });
-
+  const userCount = await User.countDocuments(filters);
   res.set('X-Total-Count', userCount);
 
   sendResponse(res, 200, 'Users retrieved successfully', users);

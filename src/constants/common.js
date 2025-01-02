@@ -73,3 +73,9 @@ export const LIMIT = Object.freeze({
   MAX: 100,
   DEFAULT: 10,
 });
+
+export const FILTER_OPTIONS = Object.freeze({
+  TRUE: 'true',
+  FALSE: 'false',
+  ALL: 'all',
+});
