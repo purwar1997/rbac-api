@@ -61,3 +61,14 @@ export const FILE_UPLOAD = Object.freeze({
   MAX_FILES: 1,
   MAX_FILE_SIZE: 20 * 1024 * 1024,
 });
+
+export const PAGE = Object.freeze({
+  MIN: 1,
+  DEFAULT: 1,
+});
+
+export const LIMIT = Object.freeze({
+  MIN: 1,
+  MAX: 100,
+  DEFAULT: 10,
+});

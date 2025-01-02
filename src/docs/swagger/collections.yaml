@@ -163,7 +163,7 @@ paths:
       tags:
         - Users
       description: Allows authenticated users to retrieve their profile
-      operationId: getUserProfile
+      operationId: getProfile
       responses:
         '200':
           description: A JSON object containing user's profile
@@ -183,7 +183,7 @@ paths:
       tags:
         - Users
       description: Allows authenticated users to update their profile
-      operationId: updateUserProfile
+      operationId: updateProfile
       requestBody:
         description: A JSON object containing profile updates
         required: true
@@ -328,8 +328,11 @@ paths:
     get:
       tags:
         - Users
-      description: Allows authenticated users to retrieve a list of other users
+      description: Allows authenticated users to retrieve a paginated list of other users
       operationId: getUsers
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
       responses:
         '200':
           description: A JSON object containing a list of users
@@ -363,6 +366,12 @@ paths:
                           type: boolean
                         role:
                           $ref: '#/components/schemas/Role'
+          headers:
+            X-Total-Count:
+              description: Total number of users
+              schema:
+                type: integer
+                format: int32
 
   /users/{userId}:
     get:
@@ -601,8 +610,11 @@ paths:
     get:
       tags:
         - Roles
-      description: Allows authenticated users to retrieve all roles
-      operationId: getAllRoles
+      description: Allows authenticated users to retrieve a paginated list of roles
+      operationId: getRoles
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
       responses:
         '200':
           description: A JSON object containing a list of roles
@@ -627,9 +639,17 @@ paths:
                         userCount:
                           type: integer
                           format: int32
+                        isActive:
+                          type: boolean
                         createdAt:
                           type: string
                           format: date-time
+          headers:
+            X-Total-Count:
+              description: Total number of roles
+              schema:
+                type: integer
+                format: int32
 
     post:
       tags:
@@ -941,3 +961,23 @@ components:
           - unassign_role
           - activate_role
           - deactivate_role
+
+  parameters:
+    pageParam:
+      in: query
+      name: page
+      description: Page number for paginated results
+      schema:
+        type: integer
+        format: int32
+        min: 1
+
+    limitParam:
+      in: query
+      name: limit
+      description: Number of items per page
+      schema:
+        type: integer
+        format: int32
+        min: 1
+        max: 100

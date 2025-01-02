@@ -8,14 +8,14 @@ import { uploadImage, deleteImage } from '../services/cloudinaryAPIs.js';
 import { FILE_UPLOAD } from '../constants/index.js';
 
 // Allows authenticated users to retrieve their profile
-export const getUserProfile = handleAsync(async (req, res) => {
+export const getProfile = handleAsync(async (req, res) => {
   const { user } = req;
 
   sendResponse(res, 200, 'Profile retrieved successfully', user);
 });
 
 // Allows authenticated users to update their profile
-export const updateUserProfile = handleAsync(async (req, res) => {
+export const updateProfile = handleAsync(async (req, res) => {
   const updates = req.body;
 
   if (!updates.password) {
@@ -129,11 +129,13 @@ export const removeProfilePhoto = handleAsync(async (req, res) => {
   sendResponse(res, 200, 'Profile photo removed successfully', updatedUser);
 });
 
-// Allows authenticated users to retrieve a list of other users
+// Allows authenticated users to retrieve a paginated list of other users
 export const getUsers = handleAsync(async (req, res) => {
+  const { page, limit } = req.query;
+
   const users = await User.find({
-    isArchived: false,
     _id: { $ne: req.user._id },
+    isArchived: false,
   })
     .select({
       firstname: 1,
@@ -143,7 +145,16 @@ export const getUsers = handleAsync(async (req, res) => {
       role: 1,
       isActive: 1,
     })
+    .skip((page - 1) * limit)
+    .limit(limit)
     .populate('role');
+
+  const userCount = await User.countDocuments({
+    _id: { $ne: req.user._id },
+    isArchived: false,
+  });
+
+  res.set('X-Total-Count', userCount);
 
   sendResponse(res, 200, 'Users retrieved successfully', users);
 });

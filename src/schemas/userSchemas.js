@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import customJoi from '../utils/customJoi.js';
 import { stripObjectKeys, validateObjectId } from '../utils/helperFunctions.js';
+import { limitSchema, pageSchema } from './commonSchemas.js';
 import { REGEX } from '../constants/index.js';
 
 export const updateProfileSchema = customJoi
@@ -57,4 +58,9 @@ export const userIdSchema = Joi.object({
     'string.empty': 'User ID cannot be empty',
     'any.invalid': 'User ID is invalid. Expected a valid objectId',
   }),
+});
+
+export const usersQuerySchema = Joi.object({
+  page: pageSchema,
+  limit: limitSchema,
 });

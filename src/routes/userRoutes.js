@@ -1,12 +1,21 @@
 import express from 'express';
 import { isAuthenticated, isAuthorized } from '../middlewares/authMiddlewares.js';
-import { validatePathParams, validatePayload } from '../middlewares/requestValidators.js';
+import {
+  validatePathParams,
+  validateQueryParams,
+  validatePayload,
+} from '../middlewares/requestValidators.js';
 import { parseFormData } from '../middlewares/parseFormData.js';
 import { checkUserSelfAction } from '../middlewares/checkUserSelfAction.js';
-import { updateProfileSchema, userIdSchema, roleSchema } from '../schemas/userSchemas.js';
 import {
-  getUserProfile,
-  updateUserProfile,
+  updateProfileSchema,
+  userIdSchema,
+  roleSchema,
+  usersQuerySchema,
+} from '../schemas/userSchemas.js';
+import {
+  getProfile,
+  updateProfile,
   deleteAccount,
   addProfilePhoto,
   updateProfilePhoto,
@@ -25,13 +34,13 @@ import { PERMISSIONS, FILE_UPLOAD } from '../constants/index.js';
 
 const router = express.Router();
 
-router.route('/').get(isAuthenticated, getUsers);
+router.route('/').get(isAuthenticated, validateQueryParams(usersQuerySchema), getUsers);
 
 router
   .route('/self')
   .all(isAuthenticated)
-  .get(getUserProfile)
-  .put(validatePayload(updateProfileSchema), updateUserProfile)
+  .get(getProfile)
+  .put(validatePayload(updateProfileSchema), updateProfile)
   .delete(deleteAccount);
 
 router

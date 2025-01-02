@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  getAllRoles,
+  getRoles,
   getRoleById,
   addNewRole,
   updateRole,
@@ -9,8 +9,12 @@ import {
   deactivateRole,
 } from '../controllers/roleControllers.js';
 import { isAuthenticated, isAuthorized } from '../middlewares/authMiddlewares.js';
-import { validatePathParams, validatePayload } from '../middlewares/requestValidators.js';
-import { roleIdSchema, roleBodySchema } from '../schemas/roleSchemas.js';
+import {
+  validatePathParams,
+  validateQueryParams,
+  validatePayload,
+} from '../middlewares/requestValidators.js';
+import { roleIdSchema, roleBodySchema, rolesQuerySchema } from '../schemas/roleSchemas.js';
 import { PERMISSIONS } from '../constants/index.js';
 
 const router = express.Router();
@@ -18,7 +22,7 @@ const router = express.Router();
 router
   .route('/')
   .all(isAuthenticated)
-  .get(getAllRoles)
+  .get(validateQueryParams(rolesQuerySchema), getRoles)
   .post(isAuthorized(PERMISSIONS.ROLE.ADD), validatePayload(roleBodySchema), addNewRole);
 
 router

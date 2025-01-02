@@ -4,13 +4,23 @@ import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
 import { hasAllPermissions, sendResponse } from '../utils/helperFunctions.js';
 
-// Allows authenticated users to retrieve all roles
-export const getAllRoles = handleAsync(async (_req, res) => {
-  const roles = await Role.find().select({
-    title: 1,
-    userCount: 1,
-    createdAt: 1,
-  });
+// Allows authenticated users to retrieve a paginated list of roles
+export const getRoles = handleAsync(async (req, res) => {
+  const { page, limit } = req.query;
+
+  const roles = await Role.find()
+    .select({
+      title: 1,
+      userCount: 1,
+      isActive: 1,
+      createdAt: 1,
+    })
+    .skip((page - 1) * limit)
+    .limit(limit);
+
+  const roleCount = await Role.find();
+
+  res.set('X-Total-Count', roleCount);
 
   sendResponse(res, 200, 'Roles retrieved successfully', roles);
 });

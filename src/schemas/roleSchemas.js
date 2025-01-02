@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import customJoi from '../utils/customJoi.js';
 import { validateObjectId, formatOptions, checkPermissions } from '../utils/helperFunctions.js';
+import { limitSchema, pageSchema } from './commonSchemas.js';
 import { REGEX, PERMISSIONS } from '../constants/index.js';
 
 export const roleBodySchema = customJoi.object({
@@ -34,4 +35,9 @@ export const roleIdSchema = Joi.object({
     'string.empty': 'Role ID cannot be empty',
     'any.invalid': 'Invalid ID format. Expected a valid objectId',
   }),
+});
+
+export const rolesQuerySchema = Joi.object({
+  page: pageSchema,
+  limit: limitSchema,
 });
