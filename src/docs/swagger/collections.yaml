@@ -648,6 +648,22 @@ paths:
       operationId: getRoles
       parameters:
         - in: query
+          name: permissions
+          description: Field to filter roles by permissions
+          schema:
+            $ref: '#/components/schemas/RolePermissions'
+          style: form
+          explode: false
+        - in: query
+          name: active
+          description: Field to filter roles by active status
+          schema:
+            type: string
+            enum:
+              - true
+              - false
+              - all
+        - in: query
           name: sortBy
           description: Option to sort results by
           schema:
@@ -1004,6 +1020,7 @@ components:
           - unassign_role
           - activate_role
           - deactivate_role
+      uniqueItems: true
 
   parameters:
     orderParam:

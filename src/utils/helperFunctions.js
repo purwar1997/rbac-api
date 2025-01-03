@@ -160,7 +160,7 @@ export const deepFreeze = obj => {
   return obj;
 };
 
-export const parseAmpersandSeparatedValues = (value, helpers) => {
+export const parseCommaSeparatedValues = (value, helpers) => {
   if (typeof value !== 'string') {
     return helpers.error('string.base');
   }
@@ -173,6 +173,29 @@ export const parseAmpersandSeparatedValues = (value, helpers) => {
         .filter(Boolean)
     ),
   ];
+
+  return valuesArray;
+};
+
+export const validateCommaSeparatedValues = targetValue => (value, helpers) => {
+  if (typeof value !== 'string') {
+    return helpers.error('string.base');
+  }
+
+  targetValue = Object.values(flattenObject(targetValue));
+
+  const valuesArray = [
+    ...new Set(
+      value
+        .split(',')
+        .map(val => val.trim())
+        .filter(Boolean)
+    ),
+  ];
+
+  if (!valuesArray.every(value => targetValue.includes(value))) {
+    return helpers.error('any.invalid');
+  }
 
   return valuesArray;
 };

@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { formatOptions } from '../utils/helperFunctions.js';
-import { PAGE, LIMIT } from '../constants/common.js';
+import { PAGE, LIMIT, FILTER_OPTIONS } from '../constants/common.js';
 import { SORT_ORDER } from '../constants/sortOptions.js';
 
 export const pageSchema = Joi.number()
@@ -40,4 +40,16 @@ export const orderSchema = Joi.string()
   .messages({
     'string.base': 'Order must be a string',
     'any.only': `Invalid order value. Valid options are: ${formatOptions(SORT_ORDER)}`,
+  });
+
+export const activeSchema = Joi.string()
+  .trim()
+  .lowercase()
+  .valid(...Object.values(FILTER_OPTIONS))
+  .allow('')
+  .messages({
+    'string.base': 'Active must be string',
+    'any.only': `Provided invalid value for active. Valid options are: ${formatOptions(
+      FILTER_OPTIONS
+    )}`,
   });

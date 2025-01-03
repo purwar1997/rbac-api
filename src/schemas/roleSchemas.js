@@ -1,7 +1,13 @@
 import Joi from 'joi';
 import customJoi from '../utils/customJoi.js';
-import { validateObjectId, formatOptions, checkPermissions } from '../utils/helperFunctions.js';
-import { limitSchema, orderSchema, pageSchema } from './commonSchemas.js';
+import {
+  validateObjectId,
+  formatOptions,
+  checkPermissions,
+  validateCommaSeparatedValues,
+  flattenObject,
+} from '../utils/helperFunctions.js';
+import { activeSchema, limitSchema, orderSchema, pageSchema } from './commonSchemas.js';
 import { REGEX, PERMISSIONS } from '../constants/common.js';
 import { ROLE_SORT_OPTIONS } from '../constants/sortOptions.js';
 
@@ -39,6 +45,19 @@ export const roleIdSchema = Joi.object({
 });
 
 export const rolesQuerySchema = Joi.object({
+  permissions: Joi.string()
+    .custom(validateCommaSeparatedValues(PERMISSIONS))
+    .empty('')
+    .default([])
+    .messages({
+      'string.base': 'Permissions must be a string',
+      'any.invalid': `Provided invalid permissions. Valid permissions are: ${formatOptions(
+        flattenObject(PERMISSIONS)
+      )}`,
+    }),
+
+  active: activeSchema,
+
   sortBy: Joi.string()
     .trim()
     .lowercase()

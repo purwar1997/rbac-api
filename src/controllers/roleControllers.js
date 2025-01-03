@@ -2,15 +2,25 @@ import Role from '../models/role.js';
 import User from '../models/user.js';
 import handleAsync from '../utils/handleAsync.js';
 import CustomError from '../utils/CustomError.js';
-import { hasAllPermissions, sendResponse } from '../utils/helperFunctions.js';
+import { hasAllPermissions, isBoolean, sendResponse } from '../utils/helperFunctions.js';
 import { getRoleSortRule } from '../utils/sortRules.js';
 
 // Allows authenticated users to retrieve a paginated list of roles
 export const getRoles = handleAsync(async (req, res) => {
-  const { sortBy, order, page, limit } = req.query;
+  const { active, permissions, sortBy, order, page, limit } = req.query;
+  const filters = {};
+
+  if (permissions.length) {
+    filters.permissions = { $all: permissions };
+  }
+
+  if (active && isBoolean(active)) {
+    filters.isActive = active;
+  }
+
   const sortRule = sortBy ? getRoleSortRule(sortBy, order) : { createdAt: -1 };
 
-  const roles = await Role.find()
+  const roles = await Role.find(filters)
     .select({
       title: 1,
       userCount: 1,
@@ -21,8 +31,7 @@ export const getRoles = handleAsync(async (req, res) => {
     .skip((page - 1) * limit)
     .limit(limit);
 
-  const roleCount = await Role.countDocuments();
-
+  const roleCount = await Role.countDocuments(filters);
   res.set('X-Total-Count', roleCount);
 
   sendResponse(res, 200, 'Roles retrieved successfully', roles);
