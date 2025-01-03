@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import pluralize from 'pluralize';
-import { PERMISSIONS } from '../constants/common.js';
+import { PERMISSIONS, ACTIVE_FILTER } from '../constants/common.js';
 
 export const sendResponse = (res, statusCode, message, data) => {
   res.status(statusCode).json({
@@ -200,4 +200,4 @@ export const validateCommaSeparatedValues = targetValue => (value, helpers) => {
   return valuesArray;
 };
 
-export const isBoolean = value => value === 'true' || value === 'false';
+export const isBoolean = value => value === ACTIVE_FILTER.TRUE || value === ACTIVE_FILTER.FALSE;
