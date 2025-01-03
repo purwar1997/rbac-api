@@ -169,6 +169,7 @@ export const getUsers = handleAsync(async (req, res) => {
       email: 1,
       role: 1,
       isActive: 1,
+      isArchived: 1,
       createdAt: 1,
     })
     .populate('role')

@@ -393,10 +393,12 @@ paths:
                           type: string
                         email:
                           type: string
-                        isActive:
-                          type: boolean
                         role:
                           $ref: '#/components/schemas/Role'
+                        isActive:
+                          type: boolean
+                        isArchived:
+                          type: boolean
                         createdAt:
                           type: string
                           format: date-time
