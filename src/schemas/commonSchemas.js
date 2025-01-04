@@ -14,7 +14,7 @@ export const pageSchema = Joi.number()
     'number.integer': 'Page must be an integer',
     'number.min': `Page must be at least ${PAGE.MIN}`,
     'number.max': `Page cannot exceed ${PAGE.MAX}`,
-    'number.unsafe': `Page must be within a safe range of ${Number.MIN_SAFE_INTEGER} and ${Number.MAX_SAFE_INTEGER}`,
+    'number.unsafe': `Page must be within a range of ${PAGE.MIN} and ${PAGE.MAX}`,
   });
 
 export const limitSchema = Joi.number()
@@ -28,7 +28,7 @@ export const limitSchema = Joi.number()
     'number.integer': 'Limit must be an integer',
     'number.min': `Limit must be at least ${LIMIT.MIN}`,
     'number.max': `Limit cannot exceed ${LIMIT.MAX}`,
-    'number.unsafe': `Limit must be within a safe range of ${Number.MIN_SAFE_INTEGER} and ${Number.MAX_SAFE_INTEGER}`,
+    'number.unsafe': `Limit must be within a range of ${LIMIT.MIN} and ${LIMIT.MAX}`,
   });
 
 export const orderSchema = Joi.string()

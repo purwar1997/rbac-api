@@ -53,13 +53,14 @@ APIs are documented using Swagger (OpenAPI) specification and all of them are li
 
 ## 4. Main Features
 
-- Authentication enabled using JSON Web Tokens (signup, login, reset password)
+- Authentication using JSON Web Tokens (signup, login, reset password)
 - Authorization based on roles and permissions of a user
+- Database modelling using various Mongoose schemas
+- Applied filters, sorting and pagination on Mongoose documents
 - APIs are deployed on a DigitalOcean Droplet using Nginx as a web server
 - Configured PM2 to keep the API server running as a daemon process to ensure availability
 - Utilized the cluster module to evenly distribute incoming requests across all CPU cores in the server
 - APIs are documented using Swagger (OpenAPI) specification
-- Database modelling using various Mongoose schemas
 - Validation of request payload using Joi library
 - Logging of HTTP requests using Morgan
 - Parsing of multipart/form-data using Formidable library
