@@ -73,7 +73,11 @@ export const validateObjectId = (value, helpers) => {
 };
 
 export const checkPermissions = (value, helpers) => {
-  const permissions = [...new Set(value)];
+  if (!value.every(val => typeof val === 'string')) {
+    return;
+  }
+
+  const permissions = [...new Set(value.map(val => val.trim().toLowerCase()).filter(Boolean))];
 
   if (!checkValidPermissions(permissions)) {
     return helpers.error('any.invalid');
@@ -188,7 +192,7 @@ export const validateCommaSeparatedValues = targetValue => (value, helpers) => {
     ...new Set(
       value
         .split(',')
-        .map(val => val.trim())
+        .map(val => val.trim().toLowerCase())
         .filter(Boolean)
     ),
   ];

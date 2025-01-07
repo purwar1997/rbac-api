@@ -21,7 +21,9 @@ export const roleBodySchema = customJoi.object({
   }),
 
   permissions: Joi.array()
-    .items(Joi.string())
+    .items(
+      Joi.string().allow('').messages({ 'string.base': 'Every single permission must be a string' })
+    )
     .min(1)
     .required()
     .custom(checkPermissions)
@@ -29,7 +31,6 @@ export const roleBodySchema = customJoi.object({
       'any.required': 'Permissions are required',
       'array.base': 'Permissions must be an array',
       'array.min': 'Permissions array must contain at least one value',
-      'array.includes': 'Permissions array must contain only strings',
       'any.invalid': `Provided invalid permissions. Valid permissions are: ${formatOptions(
         PERMISSIONS
       )}`,
