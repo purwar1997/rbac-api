@@ -72,7 +72,7 @@ export const addNewRole = handleAsync(async (req, res) => {
 
   if (roleByPermissions) {
     throw new CustomError(
-      `${roleByPermissions.title} role with the same permissions already exists. Either use it or provide different permissions`,
+      `${roleByPermissions.title} role with the same set of permissions already exists. Either use it or provide different permissions`,
       409
     );
   }
@@ -122,7 +122,7 @@ export const updateRole = handleAsync(async (req, res) => {
 
   if (roleByPermissions) {
     throw new CustomError(
-      `${roleByPermissions.title} role with the same permissions already exists. Either use it or provide different permissions`,
+      `${roleByPermissions.title} role with the same set of permissions already exists. Either use it or provide different permissions`,
       409
     );
   }
