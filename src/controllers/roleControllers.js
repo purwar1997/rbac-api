@@ -54,7 +54,7 @@ export const getRoleById = handleAsync(async (req, res) => {
 export const addNewRole = handleAsync(async (req, res) => {
   const { title, permissions } = req.body;
 
-  const roleByTitle = await Role.findOne({ title });
+  const roleByTitle = await Role.findOne({ title }).collation({ locale: 'en', strength: 2 });
 
   if (roleByTitle) {
     throw new CustomError(
@@ -103,7 +103,10 @@ export const updateRole = handleAsync(async (req, res) => {
     );
   }
 
-  const roleByTitle = await Role.findOne({ title, _id: { $ne: roleId } });
+  const roleByTitle = await Role.findOne({ title, _id: { $ne: roleId } }).collation({
+    locale: 'en',
+    strength: 2,
+  });
 
   if (roleByTitle) {
     throw new CustomError(

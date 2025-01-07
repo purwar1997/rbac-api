@@ -148,7 +148,11 @@ export const getUsers = handleAsync(async (req, res) => {
     }
 
     if (roles.length) {
-      const roleDocuments = await Role.find({ title: { $in: roles } });
+      const roleDocuments = await Role.find({ title: { $in: roles } }).collation({
+        locale: 'en',
+        strength: 2,
+      });
+
       const roleIds = roleDocuments.map(role => role._id);
       rolesFilter.push({ role: { $in: roleIds } });
     }
