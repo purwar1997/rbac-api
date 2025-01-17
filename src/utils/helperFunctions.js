@@ -72,18 +72,20 @@ export const validateObjectId = (value, helpers) => {
   return value;
 };
 
-export const checkPermissions = (value, helpers) => {
-  if (!value.every(val => typeof val === 'string')) {
-    return;
+export const checkPermission = (value, helpers) => {
+  if (typeof value !== 'string') {
+    return helpers.error('string.base');
   }
 
-  const permissions = [...new Set(value.map(val => val.trim().toLowerCase()).filter(Boolean))];
+  if (!value) {
+    return helpers.error('string.empty');
+  }
 
-  if (!checkValidPermissions(permissions)) {
+  if (!Object.values(flattenObject(PERMISSIONS)).includes(value)) {
     return helpers.error('any.invalid');
   }
 
-  return permissions;
+  return value;
 };
 
 export const formatOptions = options => {

@@ -3,7 +3,7 @@ import customJoi from '../utils/customJoi.js';
 import {
   validateObjectId,
   formatOptions,
-  checkPermissions,
+  checkPermission,
   validateCommaSeparatedValues,
   flattenObject,
 } from '../utils/helperFunctions.js';
@@ -22,19 +22,28 @@ export const roleBodySchema = customJoi.object({
 
   permissions: Joi.array()
     .items(
-      Joi.string().allow('').messages({ 'string.base': 'Every single permission must be a string' })
+      Joi.string()
+        .trim()
+        .lowercase()
+        .custom(checkPermission)
+        .messages({
+          'string.base': 'Each permission must be a string',
+          'string.empty': 'Permission cannot be an empty value',
+          'any.invalid': `Provided invalid permission. Valid permissions are: ${formatOptions(
+            PERMISSIONS
+          )}`,
+        })
     )
     .min(1)
     .required()
-    .custom(checkPermissions)
+    .custom(value => [...new Set(value)])
     .messages({
       'any.required': 'Permissions are required',
       'array.base': 'Permissions must be an array',
-      'array.min': 'Permissions array must contain at least one value',
-      'any.invalid': `Provided invalid permissions. Valid permissions are: ${formatOptions(
-        PERMISSIONS
-      )}`,
-    }),
+      'array.min': 'Role must have at least one permission',
+      'array.sparse': 'Undefined values are not allowed in permissions array',
+    })
+    .options({ abortEarly: true }),
 });
 
 export const roleIdSchema = Joi.object({
