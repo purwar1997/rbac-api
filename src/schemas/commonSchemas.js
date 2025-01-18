@@ -39,7 +39,7 @@ export const orderSchema = Joi.string()
   .default(SORT_ORDER.ASCENDING)
   .messages({
     'string.base': 'Order must be a string',
-    'any.only': `Invalid order value. Valid options are: ${formatOptions(SORT_ORDER)}`,
+    'any.only': `Invalid value for order. Valid options are: ${formatOptions(SORT_ORDER)}`,
   });
 
 export const activeSchema = Joi.string()
@@ -50,7 +50,5 @@ export const activeSchema = Joi.string()
   .default(ACTIVE_FILTER.ALL)
   .messages({
     'string.base': 'Active must be a string',
-    'any.only': `Provided invalid value for active. Valid options are: ${formatOptions(
-      ACTIVE_FILTER
-    )}`,
+    'any.only': `Invalid value for active. Valid options are: ${formatOptions(ACTIVE_FILTER)}`,
   });

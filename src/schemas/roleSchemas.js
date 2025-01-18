@@ -28,8 +28,8 @@ export const roleBodySchema = customJoi.object({
         .custom(checkPermission)
         .messages({
           'string.base': 'Each permission must be a string',
-          'string.empty': 'Permission cannot be an empty value',
-          'any.invalid': `Provided invalid permission. Valid permissions are: ${formatOptions(
+          'string.empty': 'Permissions array cannot have empty values',
+          'any.invalid': `One or more permissions are invalid. Valid permissions are: ${formatOptions(
             PERMISSIONS
           )}`,
         })
@@ -50,18 +50,17 @@ export const roleIdSchema = Joi.object({
   roleId: Joi.string().trim().empty(':roleId').required().custom(validateObjectId).messages({
     'any.required': 'Role ID is required',
     'string.empty': 'Role ID cannot be empty',
-    'any.invalid': 'Invalid ID format. Expected a valid objectId',
+    'any.invalid': 'Role ID is invalid. Expected a valid ObjectId',
   }),
 });
 
 export const rolesQuerySchema = Joi.object({
   permissions: Joi.string()
-    .custom(validateCommaSeparatedValues(PERMISSIONS))
     .empty('')
     .default([])
+    .custom(validateCommaSeparatedValues(PERMISSIONS))
     .messages({
-      'string.base': 'Permissions must be a string',
-      'any.invalid': `Provided invalid permissions. Valid permissions are: ${formatOptions(
+      'any.invalid': `One or more permissions are invalid. Valid permissions are: ${formatOptions(
         flattenObject(PERMISSIONS)
       )}`,
     }),
@@ -75,7 +74,9 @@ export const rolesQuerySchema = Joi.object({
     .allow('')
     .messages({
       'string.base': 'Sort option must be a string',
-      'any.only': `Invalid sort value. Valid options are: ${formatOptions(ROLE_SORT_OPTIONS)}`,
+      'any.only': `Invalid value for sortBy. Valid options are: ${formatOptions(
+        ROLE_SORT_OPTIONS
+      )}`,
     }),
 
   order: orderSchema,

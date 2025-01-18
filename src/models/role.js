@@ -27,7 +27,7 @@ const roleSchema = new Schema(
         },
         {
           validator: checkValidPermissions,
-          message: `Provided invalid permissions. Valid permissions are: ${formatOptions(
+          message: `One or more permissions are invalid. Valid permissions are: ${formatOptions(
             PERMISSIONS
           )}`,
         },

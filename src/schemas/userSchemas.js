@@ -54,7 +54,7 @@ export const roleSchema = customJoi.object({
     'any.required': 'Role is required',
     'string.base': 'Role must be a string',
     'string.empty': 'Role cannot be empty',
-    'any.invalid': 'Invalid ID format. Role must be a valid objectId',
+    'any.invalid': 'Invalid value for role. Expected a valid ObjectId',
   }),
 });
 
@@ -62,15 +62,12 @@ export const userIdSchema = Joi.object({
   userId: Joi.string().trim().empty(':userId').custom(validateObjectId).required().messages({
     'any.required': 'User ID is required',
     'string.empty': 'User ID cannot be empty',
-    'any.invalid': 'User ID is invalid. Expected a valid objectId',
+    'any.invalid': 'User ID is invalid. Expected a valid ObjectId',
   }),
 });
 
 export const usersQuerySchema = Joi.object({
-  roles: Joi.string().custom(parseCommaSeparatedValues).empty('').default([]).messages({
-    'string.base': 'Roles must be a string',
-  }),
-
+  roles: Joi.string().empty('').default([]).custom(parseCommaSeparatedValues),
   active: activeSchema,
 
   archived: Joi.boolean().truthy('yes', '1').falsy('no', '0').default(false).messages({
@@ -84,7 +81,9 @@ export const usersQuerySchema = Joi.object({
     .allow('')
     .messages({
       'string.base': 'Sort option must be a string',
-      'any.only': `Invalid sort value. Valid options are: ${formatOptions(USER_SORT_OPTIONS)}`,
+      'any.only': `Invalid value for sortBy. Valid options are: ${formatOptions(
+        USER_SORT_OPTIONS
+      )}`,
     }),
 
   order: orderSchema,
