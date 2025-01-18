@@ -160,7 +160,7 @@ export const getUsers = handleAsync(async (req, res) => {
     filters = { ...filters, $or: rolesFilter };
   }
 
-  if (active && isBoolean(active)) {
+  if (isBoolean(active)) {
     filters.isActive = active;
   }
 

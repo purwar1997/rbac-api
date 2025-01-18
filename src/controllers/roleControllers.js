@@ -14,7 +14,7 @@ export const getRoles = handleAsync(async (req, res) => {
     filters.permissions = { $all: permissions };
   }
 
-  if (active && isBoolean(active)) {
+  if (isBoolean(active)) {
     filters.isActive = active;
   }
 

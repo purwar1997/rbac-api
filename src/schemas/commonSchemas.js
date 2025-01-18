@@ -46,9 +46,10 @@ export const activeSchema = Joi.string()
   .trim()
   .lowercase()
   .valid(...Object.values(ACTIVE_FILTER))
-  .allow('')
+  .empty('')
+  .default(ACTIVE_FILTER.ALL)
   .messages({
-    'string.base': 'Active must be string',
+    'string.base': 'Active must be a string',
     'any.only': `Provided invalid value for active. Valid options are: ${formatOptions(
       ACTIVE_FILTER
     )}`,
