@@ -473,7 +473,7 @@ paths:
       parameters:
         - in: path
           name: userId
-          description: ID of the user that needs to be assigned a role
+          description: ID of the user to be assigned a role
           required: true
           schema:
             type: string
@@ -511,7 +511,7 @@ paths:
       parameters:
         - in: path
           name: userId
-          description: ID of the user whose role needs to be unassigned
+          description: ID of the user to be unassigned a role
           required: true
           schema:
             type: string
@@ -539,7 +539,7 @@ paths:
       parameters:
         - in: path
           name: userId
-          description: ID of the user that needs to be activated
+          description: ID of the user to be activated
           required: true
           schema:
             type: string
@@ -567,7 +567,7 @@ paths:
       parameters:
         - in: path
           name: userId
-          description: ID of the user that needs to be deactivated
+          description: ID of the user to be deactivated
           required: true
           schema:
             type: string
@@ -595,7 +595,7 @@ paths:
       parameters:
         - in: path
           name: userId
-          description: ID of the user that needs to be archived
+          description: ID of the user to be archived
           required: true
           schema:
             type: string
@@ -623,7 +623,7 @@ paths:
       parameters:
         - in: path
           name: userId
-          description: ID of the archived user that needs to be restored
+          description: ID of the archived user to be restored
           required: true
           schema:
             type: string
