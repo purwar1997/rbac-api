@@ -8,6 +8,8 @@
 1. [Overview](#1-overview)
 2. [Roles and Permissions](#2-roles-and-permissions)
 3. [Deployment and Documentation](#3-deployment-and-documentation)
+   - [Swagger Docs](#swagger-docs)
+   - [Postman Docs](#postman-docs)
 4. [Main Features](#4-main-features)
 5. [Schemas and Routes](#5-schemas-and-routes)
    - [Authentication Routes](#authentication-routes)
@@ -47,9 +49,17 @@ This table encapsulates the relationship between different permissions and roles
 
 This project is deployed on a DigitalOcean Droplet and linked to a custom domain. To visit the live deployment, [click here](http://api.rbac.shubhampurwar.in).
 
-APIs are documented using Swagger (OpenAPI) specification and all of them are live and functional. [Click here](http://api.rbac.shubhampurwar.in/docs/swagger) to view API docs. Select RBAC production server in the dropdown menu and play with any API.
+### Swagger Docs
 
-[![Documentation Preview](/media/swagger.png)](http://api.rbac.shubhampurwar.in/docs/swagger)
+APIs are documented using Swagger (OpenAPI) specification and all of them are live and functional. To view Swagger docs, [click here](http://api.rbac.shubhampurwar.in/docs/swagger). Select RBAC production server in the dropdown menu and play with any API.
+
+[![Swagger Docs](./media/swagger-docs.png)](http://api.rbac.shubhampurwar.in/docs/swagger)
+
+### Postman Docs
+
+Postman is used to prototype, develop and test API endpoints. It is also used to document those APIs. To view Postman docs, [click here](https://documenter.getpostman.com/view/24544020/2sAYQcFAqF).
+
+[![Postman Docs](./media/postman-docs.png)](https://documenter.getpostman.com/view/24544020/2sAYQcFAqF)
 
 ## 4. Main Features
 
@@ -70,6 +80,7 @@ APIs are documented using Swagger (OpenAPI) specification and all of them are li
 - Routing enabled using Express middlewares
 - Centralized error handling using Express middlewares
 - Project is based on MVC architecture
+- Used Postman to prototype, develop, test and document APIs
 
 ## 5. Schemas and Routes
 
