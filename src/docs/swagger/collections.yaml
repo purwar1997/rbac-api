@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   title: RBAC
-  description: The API collection for a Role-based access control system
+  description: The API collection for a role-based access control system
   version: 1.0.0
 
 servers:

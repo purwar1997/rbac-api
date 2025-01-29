@@ -1,7 +1,7 @@
 {
   "name": "rbac-api",
   "version": "1.0.0",
-  "description": "RESTful APIs for a role-based access control system",
+  "description": "A RESTful API for a role-based access control system",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
